@@ -44,7 +44,7 @@ Vue.use(VueResource)
 
 window.moment = moment;
 moment.locale('zh-cn');
-window.api_url = 'http://127.0.0.1:7001';
+window.api_url = 'http://47.98.221.243:7001';
 Vue.filter('dateformat', function(dataStr) {
   if (!dataStr){
     return '';
