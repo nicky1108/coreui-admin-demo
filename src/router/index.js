@@ -29,6 +29,11 @@ const Room = () => import('@/views/system/Room')
 //门店管理路由
 const Shop = () => import('@/views/shop/Shop')
 
+
+//交班管理
+const Change = () => import('@/views/workers/Change')
+const ChangeHis = () => import('@/views/workers/ChangeHis')
+
 Vue.use(Router)
 
 export default new Router({
@@ -62,6 +67,24 @@ export default new Router({
           path: 'order',
           name: '订单管理',
           component: Order
+        }
+      ]
+    },
+    {
+      path: '/worker',
+      redirect: '/worker/change',
+      name: '交班管理',
+      component: DefaultContainer,
+      children: [
+        {
+          path: 'change',
+          name: '交班',
+          component: Change
+        },
+        {
+          path: 'his',
+          name: '交班记录',
+          component: ChangeHis
         }
       ]
     },
