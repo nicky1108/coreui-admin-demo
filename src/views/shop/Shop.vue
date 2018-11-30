@@ -27,7 +27,7 @@
           <b-input-group>
             <b-input-group-prepend><b-input-group-text>营业时间：</b-input-group-text></b-input-group-prepend>
             <input type="text" class="form-control" placeholder="开始时间" autocomplete="job name" v-model="config_keyname" />
-            <b-input-group-pend><b-input-group-text>--</b-input-group-text></b-input-group-pend>
+            <b-input-group-append><b-input-group-text>--</b-input-group-text></b-input-group-append>
             <input type="text" class="form-control" placeholder="结束时间" autocomplete="job name" v-model="config_keyname" />
           </b-input-group>
         </b-col>

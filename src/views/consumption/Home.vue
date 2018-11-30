@@ -173,10 +173,10 @@
     </div>
 </template>
 
-<script>  
+<script>
     // Import this component
     import datePicker from 'vue-bootstrap-datetimepicker';
-    
+
     // Import date picker css
     import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
     export default {
@@ -185,7 +185,7 @@
             datePicker
         },
         data: () => {
-            return { 
+            return {
                 seats: [],
                 seat_status_modal: false,
                 modal_status_order: '1',
@@ -200,7 +200,7 @@
                     format: 'HH:mm:ss',
                     useCurrent: true,
                     locale: 'zh'
-                }    
+                }
             }
         },
         created () {
@@ -214,7 +214,7 @@
         methods: {
             fetchData: function () {
                 let self = this;
-                let shop_id = localStorage.getItem('shop_id');
+                let shop_id = localStorage.getItem('default_shop_id');
                 if ('shop_id' in self.$route.query) {
                     shop_id = self.$route.query.shop_id;
                 }

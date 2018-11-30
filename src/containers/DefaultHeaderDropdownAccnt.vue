@@ -5,13 +5,14 @@
         src="img/avatars/6.jpg"
         class="img-avatar"
         alt="admin@bootstrapmaster.com" />
-    </template>\
+      <span>{{nickname}}</span>
+    </template>
     <template slot="dropdown">
       <b-dropdown-header tag="div" class="text-center"><strong>门店列表</strong></b-dropdown-header>
       <b-dropdown-item v-for="(item, index) in shopList" :key="index">
         <router-link :to="'/consumption/home?shop_id='+item.id">{{ item.shopname }}</router-link>
       </b-dropdown-item>
-      
+
       <b-dropdown-header
         tag="div"
         class="text-center">
@@ -31,7 +32,7 @@ export default {
     AppHeaderDropdown
   },
   data: () => {
-    return { 
+    return {
       shopList: [],
       nickname: ''
     }
@@ -51,6 +52,7 @@ export default {
       self.$http.get('/api/admin/shop/list').then((response) => {
         if (response.body.code === 0){
           self.shopList = response.body.data;
+          localStorage.setItem('default_shop_id', self.shopList[0].id);
         }
       })
     }
