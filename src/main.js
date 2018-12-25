@@ -44,7 +44,7 @@ Vue.use(VueResource);
 
 window.moment = moment;
 moment.locale('zh-cn');
-window.api_url = 'http://47.96.136.67:7001';
+window.api_url = 'https://smriti.shop';
 Vue.filter('dateformat', function(dataStr) {
   if (!dataStr){
     return '';
