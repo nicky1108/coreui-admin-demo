@@ -29,17 +29,17 @@ const options = {
   error: toast,
   info: toast,
   warn: toast
-}
+};
 //  VueNotifications.setPluginOptions(options)
 
-Vue.use(VueNotifications, options)
+Vue.use(VueNotifications, options);
 
 // todo
 // cssVars()
 
-Vue.use(BootstrapVue)
+Vue.use(BootstrapVue);
 
-Vue.use(VueResource)
+Vue.use(VueResource);
 
 
 window.moment = moment;
@@ -98,7 +98,7 @@ let app = new Vue({
   components: {
     App
   }
-})
+});
 
 
 

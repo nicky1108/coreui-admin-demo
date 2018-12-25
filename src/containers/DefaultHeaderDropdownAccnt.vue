@@ -48,7 +48,7 @@ export default {
   methods: {
     fetchData: function () {
       let self = this;
-      self.nickname = localStorage.getItem('nickname', '超级管理员');
+      self.nickname = localStorage.getItem('nickname');
       self.$http.get('/api/admin/shop/list').then((response) => {
         if (response.body.code === 0){
           self.shopList = response.body.data;
