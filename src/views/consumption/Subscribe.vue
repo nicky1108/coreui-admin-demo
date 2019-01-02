@@ -27,6 +27,9 @@
                 <template slot="status" slot-scope="data">
                     <b-badge :variant="getBadge(data.item.status)">{{ getStatus(data.item.status)}}</b-badge>
                 </template>
+                <template slot="date" slot-scope="data">
+                  <span v-for="(dateitem, index) in data.item.date">{{dateitem}}</span>
+                </template>
             </b-table>
             <nav>
             <b-pagination :total-rows="totalRows" :per-page="perPage" v-model="currentPage" prev-text="上一页" next-text="下一页" hide-goto-end-buttons :change="getData(currentPage)"/>
@@ -53,32 +56,36 @@ export default {
         fields: [
             {id: "编号"},
             {sub_code: "预约码"},
+            {sun_from: "预约方式"},
             {contact: "预约人"},
-            {gmt_create: "预约下单时间"},
-            {gmt_sub_con: "预约消费时间"},
-            {gmt_con: "消费时间"},
-            {gmt_expire: "失效时间"},
+            {gmt_sub_con: "预约到店时间"},
+          // {gmt_create: "预约下单时间"},
+          //   {gmt_con: "消费时间"},
+          //   {gmt_expire: "失效时间"},
             {p_number: "人数"},
             {status: "状态"},
             {phone: "用户账号"},
             {shopname: "预约门店"},
-            {seatname: "座位"},
+            {positionname: "桌位类型"},
+            {roomname: "房间"},
+            {seatname: "桌位"},
+            {remark: "备注"},
+            {date: "时间流水"},
         ]
     }
   },
   methods: {
     getBadge (status) {
-      return status === 'completed' ? 'success'
-        : status === 'success' ? 'success'
-        : status === 'queued' ? 'secondary'
-          : status === 'running' ? 'warning'
-          : status === 'pending' ? 'secondary'
-          : status === 'fail' ? 'danger'
-          : status === -1 ? 'danger'
-            : status === 'failed' ? 'danger' : 'primary'
+      return status === 1 ? 'success'
+          : status === -8 ? 'warning'
+          : status === -1 ? 'secondary'
+          : status === -9 ? 'danger': 'primary';
     },
     getStatus (status) {
-        return status === -1 ? '未生效': '已生效';
+        return status === -1 ? '未生效'
+          : status === 1 ? '已生效'
+          : status === -8 ? '已取消'
+          : status === -9 ? '已作废' : '';
     },
     getButtons (setting) {
 
@@ -101,6 +108,21 @@ export default {
                 self.items = self.items.concat(response.body.data.list);
             }
         })
+    },
+    getDate (item) {
+      let self = this;
+      let str = [];
+      str.push('下单时间：' + moment(item.gmt_create).format('YYYY-MM-DD HH:mm:ss'));
+      if (item.status === 1) {
+        str.push('生效时间：' + moment(item.gmt_confirm).format('YYYY-MM-DD HH:mm:ss'));
+      }
+      else if (item.status === -8) {
+        str.push('取消时间：' + moment(item.gmt_cancel).format('YYYY-MM-DD HH:mm:ss'));
+      }
+      else if (item.status === -9) {
+        str.push('作废时间：' + moment(item.gmt_block).format('YYYY-MM-DD HH:mm:ss'));
+      }
+      return str;
     },
     searchData() {
         let self = this;
