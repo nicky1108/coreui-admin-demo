@@ -55,6 +55,7 @@ export default {
           window.toast.success({title:"登录成功"});
           window.localStorage.setItem('adminToken', response.body.data.token);
           window.localStorage.setItem('shop_id', response.body.data.shop_id);
+          window.localStorage.setItem('default_shop_id', response.body.data.default_shop_id);
           window.localStorage.setItem('nickname', response.body.data.nickname);
           location.href = '/#/';
         }

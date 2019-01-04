@@ -12,6 +12,9 @@
         </b-row>
         <b-card header="预约列表">
             <b-table :hover="true" :striped="true" responsive="sm" :items="items" :fields="fields" :current-page="currentPage" :per-page="perPage">
+                <template slot="id" slot-scope="data">
+                  {{  data.index + 1}}
+                </template>
                 <template slot="gmt_create" slot-scope="data">
                     {{  data.item.gmt_create | dateformat()}}
                 </template>
@@ -28,7 +31,7 @@
                     <b-badge :variant="getBadge(data.item.status)">{{ getStatus(data.item.status)}}</b-badge>
                 </template>
                 <template slot="date" slot-scope="data">
-                  <span v-for="(dateitem, index) in data.item.date">{{dateitem}}</span>
+                  <span style="display: block" v-for="(dateitem, index) in getDate(data.item)">{{dateitem}}</span>
                 </template>
             </b-table>
             <nav>
@@ -97,10 +100,11 @@ export default {
     },
     getData (page) {
         let self = this;
+        let shop_id = localStorage.getItem('default_shop_id');
         if (page <= this.ajaxPage) {
             return;
         }
-        self.$http.get(`/api/admin/sub/list?page=${page}&prePage=${self.perPage}`).then(response => {
+        self.$http.get(`/api/admin/sub/list?shopid=${shop_id}&page=${page}&prePage=${self.perPage}`).then(response => {
             if (response.body.code === 0)
             {
                 self.totalRows = response.body.data.totalCount;
@@ -126,8 +130,9 @@ export default {
     },
     searchData() {
         let self = this;
-        self.items = [];
-        self.$http.get(`/api/admin/sub/list?page=1&prePage=${self.perPage}&search=${self.search}`).then(response => {
+      let shop_id = localStorage.getItem('default_shop_id');
+      self.items = [];
+        self.$http.get(`/api/admin/sub/list?shopid=${shop_id}&page=1&prePage=${self.perPage}&search=${self.search}`).then(response => {
             if (response.body.code === 0)
             {
                 self.totalRows = response.body.data.totalCount;
