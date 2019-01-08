@@ -6,6 +6,7 @@ import Router from 'vue-router'
 const ConsumptionHome = () => import('@/views/consumption/Home')
 const Subscribe = () => import('@/views/consumption/Subscribe')
 const Order = () => import('@/views/consumption/Order')
+const OrderDetail = () => import('@/views/consumption/OrderDetail')
 
 // 会员管理
 const Vip = () => import('@/views/vip/Home')
@@ -67,6 +68,11 @@ export default new Router({
           path: 'order',
           name: '订单管理',
           component: Order
+        },
+        {
+          path: 'orderDetail',
+          name: '订单详情',
+          component: OrderDetail
         }
       ]
     },

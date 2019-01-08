@@ -137,7 +137,7 @@
                     <b-col sm="8" lg="8">
                       <b-input-group>
                         <b-input-group-prepend><b-input-group-text>商品消费</b-input-group-text></b-input-group-prepend>
-                        <input type="text" class="form-control" placeholder="输入商品消费金额"  v-model="order_data.con_price" />
+                        <input type="text" class="form-control" placeholder="输入商品消费金额"  v-model="order_data.o_con_price" />
                       </b-input-group>
                     </b-col>
                   </b-row>
@@ -746,7 +746,7 @@
                 }
               }
 
-              this.order_data.bx_price = price;
+              this.order_data.o_bx_price = price;
 
               return {
                 price: price,
@@ -1077,13 +1077,16 @@
                   ret_price: '实际消费'
                 }
               ];
-              let con_price = this.order_data.con_price ? parseFloat(this.order_data.con_price) : 0;
-              let con_price_dis = con_price;
+              let o_con_price = this.order_data.o_con_price ? parseFloat(this.order_data.o_con_price) : 0;
+              let con_price_dis = o_con_price;
               let con_discount = 1;
               if (this.order_data.level_id in this.selectRoom.vip_discount.gfc_1.discount) {
                 con_discount = this.selectRoom.vip_discount.gfc_1.discount[this.order_data.level_id];
-                con_price_dis = con_discount * con_price;
+                con_price_dis = con_discount * o_con_price;
               }
+
+              this.order_data.con_price = con_price_dis.toFixed(2);
+              this.order_data.con_price_dis = con_discount === 1 ? '无' : parseFloat(con_discount*10).toFixed(1) + '折';
 
               let bx_price = this.mathRoomPrice().price;
               let bx_price_ret = bx_price;
@@ -1093,7 +1096,11 @@
                 bx_price_ret = bx_discount * bx_price;
               }
 
-              let total = parseFloat(con_price) + parseFloat(bx_price) + parseFloat(this.mathServicePrice());
+              this.order_data.o_bx_price = bx_price.toFixed(2);
+              this.order_data.bx_price = bx_price_ret.toFixed(2);
+              this.order_data.bx_price_dis = bx_discount === 1 ? '无' : parseFloat(bx_discount*10).toFixed(1) + '折';
+
+              let total = parseFloat(o_con_price) + parseFloat(bx_price) + parseFloat(this.mathServicePrice());
               let total_ret = total;
 
               let total_discount = 1;
@@ -1106,6 +1113,7 @@
                 total_ret = parseFloat(con_price_dis) + parseFloat(bx_price_ret) + parseFloat(this.mathServicePrice());
               }
 
+
               if (total_ret <= this.order_data.balance) {
                 this.order_data.pay_type = 4;
                 this.order_data.default_pay_type = 4;
@@ -1117,13 +1125,16 @@
 
               total = total > 0 ? total.toFixed(2): total;
               total_ret = total_ret > 0 ? total_ret.toFixed(2): total_ret;
+
+              this.order_data.o_total_price = total;
+              this.order_data.total_price_dis = total_discount === 1 ? '无' : parseFloat(total_discount*10).toFixed(1) + '折';
               this.order_data.ret_total_price = total_ret;
               this.total_price = total_ret;
 
               this.orderPayTableItems = [
                 {
                   price_type:'商品金额',
-                  price: con_price.toFixed(2),
+                  price: o_con_price.toFixed(2),
                   zk: con_discount === 1 ? '无' : parseFloat(con_discount*10).toFixed(1) + '折',
                   ret_price: con_price_dis.toFixed(2)
                 },
@@ -1172,7 +1183,11 @@
                 id: self.order_data.id,
                 phone: self.order_data.phone,
                 pay_type: self.order_data.pay_type,
+                o_con_price: self.order_data.o_con_price,
+                con_price_dis: self.order_data.con_price_dis,
                 con_price: self.order_data.con_price,
+                o_bx_price: self.order_data.o_bx_price,
+                bx_price_dis: self.order_data.bx_price_dis,
                 bx_price: self.order_data.bx_price,
                 service_price: self.order_data.service_price,
                 discounts: self.order_data.discounts,
@@ -1180,7 +1195,9 @@
                 is_pay: 1,
                 seat_id: self.selectSeat.id,
                 price: self.total_price,
-                o_price: self.order_data.ret_total_price
+                o_price: self.order_data.ret_total_price,
+                o_total_price: self.order_data.o_total_price,
+                total_price_dis: self.order_data.total_price_dis
               }).then((response) => {
                 if (response.body.code === 0){
                   window.toast.success({title:"结账成功"});
