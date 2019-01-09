@@ -62,8 +62,8 @@ export default {
             {seatname: "桌号"},
             {status: "状态"},
             {roomname: "房间名称"},
-            {bx_price: "包间消费"},
-            {con_price: "商品消费"},
+            {o_bx_price: "包间消费"},
+            {o_con_price: "商品消费"},
             {service_price: "服务费"},
             {o_price: "折后金额"},
             {discounts: "手动优惠"},
@@ -139,7 +139,8 @@ export default {
         if (page <= this.ajaxPage) {
             return;
         }
-        self.$http.get(`/api/admin/order/list?page=${page}&prePage=${self.perPage}`).then(response => {
+      let shop_id = localStorage.getItem('default_shop_id');
+        self.$http.get(`/api/admin/order/list?shopid=${shop_id}&page=${page}&prePage=${self.perPage}`).then(response => {
             if (response.body.code === 0)
             {
                 self.totalRows = response.body.data.totalCount;

@@ -5,12 +5,12 @@
         src="img/avatars/6.jpg"
         class="img-avatar"
         alt="admin@bootstrapmaster.com" />
-      <span>{{nickname}}</span>
+      <span>{{nickname}}-{{shopname}}</span>
     </template>
     <template slot="dropdown">
       <b-dropdown-header tag="div" class="text-center"><strong>门店列表</strong></b-dropdown-header>
       <b-dropdown-item v-for="(item, index) in shopList" :key="index">
-        <router-link :to="'/consumption/home?shop_id='+item.id">{{ item.shopname }}</router-link>
+        <span @click="changeShop(item)">{{ item.shopname }}</span>
       </b-dropdown-item>
 
       <b-dropdown-header
@@ -34,7 +34,8 @@ export default {
   data: () => {
     return {
       shopList: [],
-      nickname: ''
+      nickname: '',
+      shopname: ''
     }
   },
   created () {
@@ -49,12 +50,29 @@ export default {
     fetchData: function () {
       let self = this;
       self.nickname = localStorage.getItem('nickname');
+      self.shopname = localStorage.getItem('shopname');
+      let shop_id = localStorage.getItem('default_shop_id');
       self.$http.get('/api/admin/shop/list').then((response) => {
         if (response.body.code === 0){
           self.shopList = response.body.data;
-          localStorage.setItem('default_shop_id', self.shopList[0].id);
+          if (!shop_id) {
+            localStorage.setItem('default_shop_id', self.shopList[0].id);
+            shop_id = self.shopList[0].id;
+          }
+
+          for(let i = 0; i < response.body.data.length; i ++) {
+            if (shop_id === self.shopList[i].id) {
+              localStorage.setItem('shopname', self.shopList[i].shopname);
+            }
+          }
         }
       })
+    },
+
+    changeShop (item) {
+      localStorage.setItem('default_shop_id', item.id);
+      localStorage.setItem('shopname', item.shopname);
+      location.reload();
     }
   }
 }

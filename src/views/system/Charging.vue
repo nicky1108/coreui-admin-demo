@@ -6,6 +6,7 @@
     </div>
     <b-card header="计费规则">
       <b-table :hover="true" :striped="true" responsive="sm" :items="items" :fields="fields" :current-page="currentPage" :per-page="perPage">
+        <template slot="type" slot-scope="data">{{getType(data.item.type)}}</template>
         <template slot="setting" slot-scope="data">
           <b-button v-for="btn in data.item.setting" :key="btn" :variant="getButtons(btn)" class="ml-2" @click="doSetting(btn, data.item)">{{btn}}</b-button>
         </template>
@@ -15,18 +16,24 @@
       </nav>
     </b-card>
 
-    <b-modal :title="modal_title" size="lg" v-model="myModal" @ok="postConfig">
+    <b-modal :title="modal_title" size="lg" v-model="myModal" @ok="postRules">
       <b-row class="mb-3">
         <b-col sm="6" lg="6">
           <b-input-group>
             <b-input-group-prepend><b-input-group-text>计费方式名称：</b-input-group-text></b-input-group-prepend>
-            <input type="text" class="form-control" placeholder="计费方式名称" autocomplete="job name" v-model="config_keyname" />
+            <input type="text" class="form-control" placeholder="计费方式名称" autocomplete="job name" v-model="selectRule.type_name" />
           </b-input-group>
         </b-col>
         <b-col sm="6" lg="6">
           <b-input-group>
-            <b-input-group-prepend><b-input-group-text><b-form-checkbox :plain="true" value="1">费用封顶：</b-form-checkbox> </b-input-group-text></b-input-group-prepend>
-            <input type="text" class="form-control" placeholder="费用封顶" autocomplete="job name" v-model="config_keyname" />
+            <b-input-group-prepend>
+              <b-input-group-text>
+                <b-form-checkbox-group :checked="[selectRule.is_max_price]">
+                  <b-form-checkbox value="1" @change="selectChange">费用封顶：</b-form-checkbox>
+                </b-form-checkbox-group>
+              </b-input-group-text>
+            </b-input-group-prepend>
+            <input type="text" class="form-control" placeholder="费用封顶" autocomplete="job name" v-model="selectRule.max_price" />
             <b-input-group-append><b-input-group-text>元</b-input-group-text></b-input-group-append>
           </b-input-group>
         </b-col>
@@ -35,21 +42,21 @@
         <b-col sm="12" lg="12">
           <b-input-group>
             <b-input-group-prepend><b-input-group-text>开单后：</b-input-group-text></b-input-group-prepend>
-            <input type="text" class="form-control" placeholder="0" autocomplete="job name" v-model="config_keyname" />
+            <input type="text" class="form-control" placeholder="0" autocomplete="job name" v-model="selectRule.first_minutes" />
             <b-input-group-text>分钟之内，按</b-input-group-text>
-            <input type="text" class="form-control" placeholder="0" autocomplete="job name" v-model="config_keyname" />
+            <input type="text" class="form-control" placeholder="0" autocomplete="job name" v-model="selectRule.first_price" />
             <b-input-group-append><b-input-group-text>元计费；</b-input-group-text></b-input-group-append>
           </b-input-group>
         </b-col>
       </b-row>
       <b-row class="mb-3">
         <b-col xs="12" lg="12">
-          <b-tabs>
-            <b-tab title="按小时计费" active>
+          <b-tabs v-model="tabIndex">
+            <b-tab title="按小时计费">
               <b-col sm="8" lg="8" class="mb-3">
                 <b-input-group>
                   <b-input-group-prepend><b-input-group-text>每小时：</b-input-group-text></b-input-group-prepend>
-                  <input type="text" class="form-control" placeholder="0" autocomplete="job name" v-model="config_keyname" />
+                  <input type="text" class="form-control" placeholder="0" autocomplete="job name" v-model="selectRule.every_h_price" />
                   <b-input-group-append><b-input-group-text>元</b-input-group-text></b-input-group-append>
                 </b-input-group>
               </b-col>
@@ -62,18 +69,18 @@
                 <h4>加收服务费</h4>
                 <b-input-group>
                   <b-input-group-prepend><b-input-group-text>00:00至06:00，每满60分钟</b-input-group-text></b-input-group-prepend>
-                  <input type="text" class="form-control" placeholder="0" autocomplete="job name" v-model="config_keyname" />
+                  <input type="text" class="form-control" placeholder="0" autocomplete="job name" v-model="selectRule.plus_h_price" />
                   <b-input-group-append><b-input-group-text>元</b-input-group-text></b-input-group-append>
                 </b-input-group>
               </b-col>
             </b-tab>
 
 
-            <b-tab title="按包段计费" >
+            <b-tab title="按包段计费">
               <b-col sm="8" lg="8" class="mb-3">
                 <b-input-group>
                   <b-input-group-prepend><b-input-group-text>每5小时：</b-input-group-text></b-input-group-prepend>
-                  <input type="text" class="form-control" placeholder="0" autocomplete="job name" v-model="config_keyname" />
+                  <input type="text" class="form-control" placeholder="0" autocomplete="job name" v-model="selectRule.every_5h_price" />
                   <b-input-group-append><b-input-group-text>元</b-input-group-text></b-input-group-append>
                 </b-input-group>
               </b-col>
@@ -81,7 +88,7 @@
                 <h4>超出时段</h4>
                 <b-input-group>
                   <b-input-group-prepend><b-input-group-text>消费超出5小时，按每小时</b-input-group-text></b-input-group-prepend>
-                  <input type="text" class="form-control" placeholder="0" autocomplete="job name" v-model="config_keyname" />
+                  <input type="text" class="form-control" placeholder="0" autocomplete="job name" v-model="selectRule.every_h_price" />
                   <b-input-group-append><b-input-group-text>元计费</b-input-group-text></b-input-group-append>
                 </b-input-group>
                 <p></p>
@@ -95,7 +102,7 @@
                 <h4>加收服务费</h4>
                 <b-input-group>
                   <b-input-group-prepend><b-input-group-text>00:00至09:00，每小时</b-input-group-text></b-input-group-prepend>
-                  <input type="text" class="form-control" placeholder="0" autocomplete="job name" v-model="config_keyname" />
+                  <input type="text" class="form-control" placeholder="0" autocomplete="job name" v-model="selectRule.plus_h_price" />
                   <b-input-group-append><b-input-group-text>元</b-input-group-text></b-input-group-append>
                 </b-input-group>
                 <p></p>
@@ -118,6 +125,7 @@
         name: "Chargin",
         data: () => {
           return {
+            tabIndex: 0,
             modal_title: '计费方式设置',
             config_keyname: '',
             config_json: '',
@@ -127,6 +135,7 @@
             perPage: 10,
             totalRows: 0,
             ajaxPage: 0,
+            selectRule: {},
             items: [
             ],
             fields: [
@@ -140,12 +149,6 @@
                 "max_price": "费用封顶"
               },
               {
-                "is_min_cost": "参与最低消费"
-              },
-              {
-                "is_point": "参与会员积分"
-              },
-              {
                 "type": "计费方式"
               },
               {
@@ -154,22 +157,46 @@
             ]
           }
         },
-        created () {
-          let self = this;
-          this.getData();
-        },
-        watch: {
-          // 如果路由有变化，会再次执行该方法
-          '$route': 'getData'
-        },
+        // created () {
+        //   let self = this;
+        //   // this.getData();
+        // },
+        // watch: {
+        //   // 如果路由有变化，会再次执行该方法
+        //   '$route': 'getData'
+        // },
         methods: {
+
+          getType (type) {
+            if (type === '1') {
+              return '按小时计费'
+            }
+
+            if (type === '2') {
+              return '按包段计费'
+            }
+          },
+
+          selectChange(e) {
+              if (e && e === '1') {
+                this.selectRule.is_max_price = 1;
+              }
+              else {
+                this.selectRule.is_max_price = -1;
+              }
+          },
 
           getData (page) {
             let self = this;
             if (page <= this.ajaxPage) {
               return;
             }
-            self.$http.get(`/api/admin/charging/list`).then(response => {
+            let shop_id = localStorage.getItem('default_shop_id');
+            if ('shop_id' in self.$route.query) {
+              shop_id = self.$route.query.shop_id;
+            }
+            page = page ? page : self.currentPage;
+            self.$http.get(`/api/admin/charging/list?shopid=${shop_id}&page=${page}&prePage=${self.perPage}`).then(response => {
               if (response.body.code === 0)
               {
                 let list = response.body.data.list;
@@ -191,35 +218,50 @@
               : setting === '删除' ? 'danger' : 'primary'
           },
 
-          postConfig() {
+          postRules() {
             let self = this;
-            self.$http.post(`/api/admin/config/post`, {
-              id: self.edit_id,
-              keyname: self.config_keyname,
-              json_value: self.config_json
-            }).then(response => {
+
+            if (self.tabIndex === 0){
+              self.selectRule.type = '1';
+            }
+            else if (self.tabIndex === 1){
+              self.selectRule.type = '2';
+            }
+
+            let shop_id = localStorage.getItem('default_shop_id');
+
+            if ('shop_id' in self.$route.query) {
+              shop_id = self.$route.query.shop_id;
+            }
+
+            self.selectRule.shop_id = shop_id;
+            self.$http.post(`/api/admin/rules/post`, self.selectRule).then(response => {
               if (response.body.code === 0)
               {
                 window.toast.success({title:"操作成功"});
                 self.getData();
               }
               else {
-                window.toast.error({title:"网络错误"});
+                window.toast.error({title:response.body.errMsg});
               }
+            }).catch(() => {
+              window.toast.error({title:"网络错误"});
             })
           },
 
           doSetting (btn, item) {
             if (btn === '修改') {
-              this.config_keyname = item.keyname;
-              this.config_json = item.json_value;
-              this.edit_id = item.id;
+              this.selectRule = item;
+              if (this.selectRule.type === '1') {
+                this.tabIndex = 0;
+              }
+              if (this.selectRule.type === '2') {
+                this.tabIndex = 1;
+              }
               this.myModal = true;
             }
             else if (btn === 'new') {
-              this.config_keyname = '';
-              this.config_json = '{}';
-              this.edit_id = null;
+              this.selectRule = {};
               this.myModal = true;
             }
           }

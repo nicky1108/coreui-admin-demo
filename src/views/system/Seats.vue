@@ -2,14 +2,12 @@
   <div class="animated fadeIn">
     <div class="row mb-2">
       <b-col sm="2" lg="2">
-        <a href="javascript:;" @click="jumpCharging">计费规则管理</a>
       </b-col>
       <div class="mb-10 mb-xl-0 col-sm-2 col-md-2 col-xl col-2"></div>
-      <div class="col-2"><button type="button" class="btn btn-primary btn-block" @click="doSetting('new')">新增房间</button></div>
+      <div class="col-2"><button type="button" class="btn btn-primary btn-block" @click="doSetting('new')">新增桌位</button></div>
     </div>
     <b-card header="房间列表">
       <b-table :hover="true" :striped="true" responsive="sm" :items="items" :fields="fields" :current-page="currentPage" :per-page="perPage">
-        <template slot="type" slot-scope="data">{{getType(data.item.type)}}</template>
         <template slot="setting" slot-scope="data">
           <b-button v-for="btn in data.item.setting" :key="btn" :variant="getButtons(btn)" class="ml-2" @click="doSetting(btn, data.item)">{{btn}}</b-button>
         </template>
@@ -29,10 +27,10 @@
         </b-col>
         <b-col sm="12" lg="12" class="mb-2">
           <b-input-group>
-            <b-input-group-prepend><b-input-group-text>大厅/包厢类型：</b-input-group-text></b-input-group-prepend>
+            <b-input-group-prepend><b-input-group-text>大厅/散座：</b-input-group-text></b-input-group-prepend>
             <b-form-select id="type"
                            :plain="true"
-                           :options="typeOptions" v-model="selectRoom.type">
+                           :options="['大厅', '散座']" v-model="selectRoom.type">
             </b-form-select>
           </b-input-group>
         </b-col>
@@ -61,7 +59,7 @@
 
 <script>
   export default {
-    name: "Room",
+    name: "Seats",
     data: () => {
       return {
         selectRoom: {},
@@ -78,24 +76,6 @@
           {
             text: '计费方式1',
             value: '1'
-          }
-        ],
-        typeOptions: [
-          {
-            text: '大厅',
-            value: 'dt'
-          },
-          {
-            text: '大包',
-            value: 'db',
-          },
-          {
-            text: '中包',
-            value: 'zb'
-          },
-          {
-            text: '小包',
-            value: 'xb'
           }
         ],
         items: [
@@ -131,15 +111,7 @@
     //   '$route': 'getData'
     // },
     methods: {
-      getType(type) {
-        let str = '';
-        for (let i = 0; i < this.typeOptions.length; i ++) {
-          if (this.typeOptions[i].value === type) {
-            str = this.typeOptions[i].text;
-          }
-        }
-        return str;
-      },
+
       getData (page) {
         let self = this;
         if (page && page <= self.ajaxPage) {

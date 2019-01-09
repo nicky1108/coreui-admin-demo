@@ -137,7 +137,7 @@
                     <b-col sm="8" lg="8">
                       <b-input-group>
                         <b-input-group-prepend><b-input-group-text>商品消费</b-input-group-text></b-input-group-prepend>
-                        <input type="text" class="form-control" placeholder="输入商品消费金额"  v-model="order_data.o_con_price" />
+                        <input type="text" class="form-control" :disabled="!orderEdit" placeholder="输入商品消费金额"  v-model="order_data.o_con_price" />
                       </b-input-group>
                     </b-col>
                   </b-row>
@@ -916,6 +916,7 @@
                 id: self.order_data.id,
                 p_number: self.order_data.p_number,
                 phone: self.order_data.phone,
+                o_con_price: self.order_data.o_con_price,
                 remark: self.order_data.remark
               }).then((response) => {
                 if (response.body.code === 0){
@@ -1181,6 +1182,7 @@
 
               self.$http.post('/api/admin/order/update', {
                 id: self.order_data.id,
+                p_number: self.order_data.p_number,
                 phone: self.order_data.phone,
                 pay_type: self.order_data.pay_type,
                 o_con_price: self.order_data.o_con_price,
