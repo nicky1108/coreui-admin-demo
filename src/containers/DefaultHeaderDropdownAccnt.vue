@@ -70,6 +70,11 @@ export default {
     },
 
     changeShop (item) {
+      let shop_id = localStorage.getItem('shop_id');
+      if (parseInt(shop_id) !== -1 && parseInt(shop_id) !== parseInt(item.id)) {
+        location.href = '#/account/login';
+        return;
+      }
       localStorage.setItem('default_shop_id', item.id);
       localStorage.setItem('shopname', item.shopname);
       location.reload();

@@ -26,6 +26,7 @@ const Config = () => import('@/views/system/Config')
 const Admin = () => import('@/views/system/Admin')
 const Charging = () => import('@/views/system/Charging')
 const Room = () => import('@/views/system/Room')
+const Seat = () => import('@/views/system/Seats')
 
 //门店管理路由
 const Shop = () => import('@/views/shop/Shop')
@@ -161,6 +162,11 @@ export default new Router({
           path: 'room',
           name: '房间设置',
           component: Room
+        },
+        {
+          path: 'seats',
+          name: '桌位设置',
+          component: Seat
         },
         {
           path: 'config',

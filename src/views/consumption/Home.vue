@@ -29,7 +29,6 @@
               <b-card no-body :class="randBg(seat.sub_status, seat.con_status)" style="min-height:190px" @click="showModal(item,seat)">
                 <b-card-body class="pb-0">
                   <h4 class="mb-0">{{ seat.seatname }}</h4>
-                  <p>{{ seat.number }}</p>
                   <p>{{ randStatus(seat.sub_status, seat.con_status) }}</p>
                   <p style="color:black; height:42px" >{{ seat.sub_data ? randSubDate(seat.sub_data.gmt_sub_con) : ''}}</p>
                   <p style="color:red; height:16px">{{ seat.sub_data ? randerSubDateIsPass(seat.sub_data.gmt_sub_con) : ''}}</p>

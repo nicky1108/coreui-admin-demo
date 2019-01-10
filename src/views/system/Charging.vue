@@ -117,6 +117,9 @@
         </b-col>
       </b-row>
     </b-modal>
+    <b-modal ref='confirmModal' class="modal-warning" :title="confirmModalTitle" v-model="confirmModal" @ok="deleteRules" ok-variant="warning">
+      {{confirmModalText}}
+    </b-modal>
   </div>
 </template>
 
@@ -125,6 +128,9 @@
         name: "Chargin",
         data: () => {
           return {
+            confirmModalTitle: '删除计费规则',
+            confirmModalText: '是否删除这个规则？',
+            confirmModal: false,
             tabIndex: 0,
             modal_title: '计费方式设置',
             config_keyname: '',
@@ -204,7 +210,11 @@
                 self.ajaxPage = page;
 
                 for(let i = 0; i < list.length; i ++){
-                  list[i]['setting'] = ['修改'];
+                  list[i]['setting'] = ['修改', '删除'];
+                }
+
+                if (page === 1) {
+                  self.items = [];
                 }
 
                 self.items = list;
@@ -249,6 +259,23 @@
             })
           },
 
+          deleteRules () {
+            let self = this;
+
+            self.$http.post(`/api/admin/rules/delete/${this.selectRule.id}`).then(response => {
+              if (response.body.code === 0)
+              {
+                window.toast.success({title:"操作成功"});
+                self.getData();
+              }
+              else {
+                window.toast.error({title:response.body.errMsg});
+              }
+            }).catch(() => {
+              window.toast.error({title:"网络错误"});
+            })
+          },
+
           doSetting (btn, item) {
             if (btn === '修改') {
               this.selectRule = item;
@@ -263,6 +290,10 @@
             else if (btn === 'new') {
               this.selectRule = {};
               this.myModal = true;
+            }
+            else if (btn === '删除') {
+              this.selectRule = item;
+              this.confirmModal = true;
             }
           }
         }

@@ -56,6 +56,9 @@
         </b-col>
       </b-row>
     </b-modal>
+    <b-modal ref='confirmModal' class="modal-warning" :title="confirmModalTitle" v-model="confirmModal" @ok="deleteRoom" ok-variant="warning">
+      {{confirmModalText}}
+    </b-modal>
   </div>
 </template>
 
@@ -64,6 +67,9 @@
     name: "Room",
     data: () => {
       return {
+        confirmModalTitle: '删除房间',
+        confirmModalText: '是否删除这个房间？',
+        confirmModal: false,
         selectRoom: {},
         modal_title: '房间编辑',
         config_keyname: '',
@@ -151,17 +157,16 @@
           shop_id = self.$route.query.shop_id;
         }
         self.rules_list = [];
+
         self.$http.get(`/api/admin/rooms/list?shopid=${shop_id}&page=${page}&prePage=${self.perPage}`).then(response => {
           if (response.body.code === 0)
           {
             let list = response.body.data.list;
             self.ajaxPage = page;
             self.totalRows = response.body.data.totalCount;
-
-            console.log(self.ajaxPage);
             //
             for(let i = 0; i < list.length; i ++){
-              list[i]['setting'] = ['修改', '查看桌台'];
+              list[i]['setting'] = ['修改', '查看桌台', '删除'];
             }
 
             let rules = response.body.data.rules;
@@ -172,6 +177,9 @@
               })
             });
 
+            if (page === 1) {
+              self.items = [];
+            }
             self.items = self.items.concat(list);
           }
         })
@@ -212,6 +220,23 @@
         })
       },
 
+      deleteRoom () {
+        let self = this;
+
+        self.$http.post(`/api/admin/rooms/delete/${this.selectRoom.id}`).then(response => {
+          if (response.body.code === 0)
+          {
+            window.toast.success({title:"操作成功"});
+            self.getData();
+          }
+          else {
+            window.toast.error({title:response.body.errMsg});
+          }
+        }).catch(() => {
+          window.toast.error({title:"网络错误"});
+        })
+      },
+
       doSetting (btn, item) {
         if (btn === '修改') {
           this.selectRoom = item;
@@ -223,6 +248,10 @@
         }
         else if (btn === '查看桌台') {
           this.$router.push(`/system/seats?room_id=${item.id}`);
+        }
+        else if (btn === '删除') {
+          this.selectRoom = item;
+          this.confirmModal = true;
         }
       },
 

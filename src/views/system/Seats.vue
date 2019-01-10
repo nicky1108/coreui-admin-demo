@@ -6,53 +6,22 @@
       <div class="mb-10 mb-xl-0 col-sm-2 col-md-2 col-xl col-2"></div>
       <div class="col-2"><button type="button" class="btn btn-primary btn-block" @click="doSetting('new')">新增桌位</button></div>
     </div>
-    <b-card header="房间列表">
-      <b-table :hover="true" :striped="true" responsive="sm" :items="items" :fields="fields" :current-page="currentPage" :per-page="perPage">
-        <template slot="setting" slot-scope="data">
-          <b-button v-for="btn in data.item.setting" :key="btn" :variant="getButtons(btn)" class="ml-2" @click="doSetting(btn, data.item)">{{btn}}</b-button>
-        </template>
-      </b-table>
-      <nav>
-        <b-pagination :total-rows="totalRows" :per-page="perPage" v-model="currentPage" prev-text="上一页" next-text="下一页" hide-goto-end-buttons :change="getData(currentPage)"/>
-      </nav>
+    <b-card header="桌位列表">
+      <b-badge class="mr-2" v-for="(item, index) in items" :key="index" :variant="getBadge(item)" @click="deleteSeat(item)">{{item.seatname}} &times;</b-badge>
     </b-card>
 
-    <b-modal :title="modal_title" v-model="myModal" @ok="postRooms">
+    <b-modal :title="modal_title" v-model="myModal" @ok="postSeats">
       <b-row class="mb-3">
         <b-col sm="12" lg="12" class="mb-2">
           <b-input-group>
-            <b-input-group-prepend><b-input-group-text>房间名称：</b-input-group-text></b-input-group-prepend>
-            <input type="text" class="form-control" placeholder="房间名称" autocomplete="job name" v-model="selectRoom.roomname" />
-          </b-input-group>
-        </b-col>
-        <b-col sm="12" lg="12" class="mb-2">
-          <b-input-group>
-            <b-input-group-prepend><b-input-group-text>大厅/散座：</b-input-group-text></b-input-group-prepend>
-            <b-form-select id="type"
-                           :plain="true"
-                           :options="['大厅', '散座']" v-model="selectRoom.type">
-            </b-form-select>
-          </b-input-group>
-        </b-col>
-        <b-col sm="12" lg="12" class="mb-2">
-          <b-input-group>
-            <b-input-group-prepend><b-input-group-text>桌位位置：</b-input-group-text></b-input-group-prepend>
-            <b-form-select id="positions"
-                           :plain="true"
-                           :options="['大厅', '包厢']" v-model="selectRoom.room_type">
-            </b-form-select>
-          </b-input-group>
-        </b-col>
-        <b-col sm="12" lg="12">
-          <b-input-group>
-            <b-input-group-prepend><b-input-group-text>计费方式：</b-input-group-text></b-input-group-prepend>
-            <b-form-select id="charging"
-                           :plain="true"
-                           :options="rules_list" v-model="selectRoom.rules_id">
-            </b-form-select>
+            <b-input-group-prepend><b-input-group-text>桌位名称(多个以逗号隔开)：</b-input-group-text></b-input-group-prepend>
+            <textarea class="form-control" v-model="seats_names" placeholder="大厅1,大厅2"></textarea>
           </b-input-group>
         </b-col>
       </b-row>
+    </b-modal>
+    <b-modal ref='confirmModal' class="modal-warning" :title="confirmModalTitle" v-model="confirmModal" @ok="postDelete" ok-variant="warning">
+      {{confirmModalText}}
     </b-modal>
   </div>
 </template>
@@ -62,89 +31,50 @@
     name: "Seats",
     data: () => {
       return {
-        selectRoom: {},
+        confirmModalTitle: '删除桌位',
+        confirmModalText: '是否删除这个桌位？',
+        confirmModal: false,
+        seats_names:'',
+        selectSeat: {},
         modal_title: '房间编辑',
         config_keyname: '',
         config_json: '',
         edit_id: null,
         myModal: false,
-        currentPage: 1,
-        perPage: 10,
-        totalRows: 0,
-        ajaxPage: 0,
-        rules_list : [
-          {
-            text: '计费方式1',
-            value: '1'
-          }
-        ],
-        items: [
-        ],
-        fields: [
-          {
-            "roomname": "房间名称"
-          },
-          {
-            "type": "大厅/散座"
-          },
-          {
-            "room_type": "桌位位置"
-          },
-          {
-            "rulesname": "计费方式"
-          },
-          {
-            "seat_count": "桌台数量"
-          },
-          {
-            "setting": "操作"
-          }
-        ]
+        items:[]
       }
     },
-    // created () {
-    //   let self = this;
-    //   this.getData();
-    // },
-    // watch: {
-    //   // 如果路由有变化，会再次执行该方法
-    //   '$route': 'getData'
-    // },
+    created () {
+      let self = this;
+      this.getData();
+    },
+    watch: {
+      // 如果路由有变化，会再次执行该方法
+      '$route': 'getData'
+    },
     methods: {
-
-      getData (page) {
+      getBadge(item) {
+        if (item.con_status === 1 || item.sub_status === 1) {
+          return 'danger';
+        }
+        else {
+          return 'success';
+        }
+      },
+      getData () {
         let self = this;
-        if (page && page <= self.ajaxPage) {
-          return;
+        let room_id = null;
+        if ('room_id' in this.$route.query) {
+          room_id = this.$route.query.room_id;
         }
-        page = page ? page : self.currentPage;
-        let shop_id = localStorage.getItem('default_shop_id');
-        if ('shop_id' in self.$route.query) {
-          shop_id = self.$route.query.shop_id;
+        if (!room_id) {
+          return ;
         }
-        self.rules_list = [];
-        self.$http.get(`/api/admin/rooms/list?shopid=${shop_id}&page=${page}&prePage=${self.perPage}`).then(response => {
+        self.$http.get(`/api/admin/seats/getSeatsFromRoom?room_id=${room_id}`).then(response => {
           if (response.body.code === 0)
           {
-            let list = response.body.data.list;
-            self.ajaxPage = page;
-            self.totalRows = response.body.data.totalCount;
 
-            console.log(self.ajaxPage);
-            //
-            for(let i = 0; i < list.length; i ++){
-              list[i]['setting'] = ['修改', '查看桌台'];
-            }
-
-            let rules = response.body.data.rules;
-            rules.forEach((item) => {
-              self.rules_list.push({
-                text: item.type_name,
-                value: item.id
-              })
-            });
-
-            self.items = self.items.concat(list);
+            self.items = response.body.data;
           }
         })
       },
@@ -155,22 +85,52 @@
           : setting === '删除' ? 'danger' : 'primary'
       },
 
-      postRooms() {
+      postDelete() {
         let self = this;
-        let shop_id = localStorage.getItem('default_shop_id');
-
-        if ('shop_id' in self.$route.query) {
-          shop_id = self.$route.query.shop_id;
-        }
-
-        self.selectRoom.shop_id = shop_id;
-
-        if (!self.selectRoom.rules_id || !self.selectRoom.roomname || !self.selectRoom.type || !self.selectRoom.room_type) {
-          window.toast.error({title:"参数不完整，请填写完成"});
+        if (self.selectSeat.sub_status === 1 || self.selectSeat.con_status === 1) {
+          window.toast.error({title:"桌位上还有未结算的订单或者未处理的预约单，请先处理"});
           return;
         }
 
-        self.$http.post(`/api/admin/rooms/post`, self.selectRoom).then(response => {
+        self.$http.post(`/api/admin/seats/delete/${self.selectSeat.id}`,).then(response => {
+          if (response.body.code === 0)
+          {
+            window.toast.success({title:"操作成功"});
+            self.getData();
+          }
+          else {
+            window.toast.error({title:response.body.errMsg});
+          }
+        }).catch(() => {
+          window.toast.error({title:"网络错误"});
+        })
+      },
+
+      deleteSeat(item) {
+        let self = this;
+        self.selectSeat = item;
+        self.confirmModal = true;
+      },
+
+      postSeats () {
+        let self = this;
+        if (self.seats_names === '') {
+          window.toast.error({title:"桌位名不能为空"});
+          return;
+        }
+
+        let room_id = null;
+        if ('room_id' in this.$route.query) {
+          room_id = this.$route.query.room_id;
+        }
+        if (!room_id) {
+          return ;
+        }
+
+        self.$http.post(`/api/admin/seats/post`, {
+          seats: self.seats_names,
+          room_id: parseInt(room_id)
+        }).then(response => {
           if (response.body.code === 0)
           {
             window.toast.success({title:"操作成功"});
@@ -193,19 +153,6 @@
           this.selectRoom = {};
           this.myModal = true;
         }
-        else if (btn === '查看桌台') {
-          this.$router.push(`/system/seats?room_id=${item.id}`);
-        }
-      },
-
-      jumpCharging () {
-        let shop_id = localStorage.getItem('default_shop_id');
-
-        if ('shop_id' in this.$route.query) {
-          shop_id = this.$route.query.shop_id;
-        }
-
-        this.$router.push(`/system/charging?shop_id=${shop_id}`);
       }
     }
   }
