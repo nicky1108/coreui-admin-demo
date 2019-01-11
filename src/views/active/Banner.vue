@@ -49,6 +49,12 @@
         </b-col>
         <b-col sm="12" lg="12" class="mb-2">
           <b-input-group>
+            <b-input-group-prepend><b-input-group-text>跳转地址：</b-input-group-text></b-input-group-prepend>
+            <input type="text" class="form-control" placeholder="跳转地址" autocomplete="job name" v-model="selectBanner.url" />
+          </b-input-group>
+        </b-col>
+        <b-col sm="12" lg="12" class="mb-2">
+          <b-input-group>
             <b-input-group-prepend><b-input-group-text>开始时间：</b-input-group-text></b-input-group-prepend>
             <date-picker v-model="selectBanner.gmt_begin" :config="options"></date-picker>
           </b-input-group>
