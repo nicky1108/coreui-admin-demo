@@ -13,6 +13,9 @@ const Vip = () => import('@/views/vip/Home')
 const VipList = () => import('@/views/vip/Viplist')
 const VipDetail = () => import('@/views/vip/VipDetail')
 
+
+const Banner = () => import('@/views/active/Banner')
+
 // Containers
 const DefaultContainer = () => import('@/containers/DefaultContainer')
 
@@ -115,6 +118,19 @@ export default new Router({
           path: 'detail',
           name: '会员详情',
           component: VipDetail
+        }
+      ]
+    },
+    {
+      path: '/act',
+      redirect: '/act/banner',
+      name: '会员管理',
+      component: DefaultContainer,
+      children: [
+        {
+          path: 'banner',
+          name: 'banner',
+          component: Banner
         }
       ]
     },
