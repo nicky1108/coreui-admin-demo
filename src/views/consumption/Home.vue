@@ -380,10 +380,11 @@
                         <b-col sm="4" lg="4" >
                             <b-btn variant="primary" class="btn-block" @click="openSubOrder" v-if="!order_data">预约开单</b-btn>
                         </b-col>
-                        <b-col sm="4" lg="4" ></b-col>
+                        <b-col sm="4" lg="4" >
+                          <b-btn variant="primary" class="btn-block" @click="showCancleModal">取消预约</b-btn>
+                        </b-col>
                         <b-col sm="4" lg="4">
-                            <b-btn variant="primary" class="btn-block" v-if="randerSubDateIsPass(sub_data.gmt_sub_con) !== ''" @click="showCancleModal">取消预约</b-btn>
-                            <b-btn variant="primary" class="btn-block" v-if="randerSubDateIsPass(sub_data.gmt_sub_con) === ''" @click="showBlockModal">预约作废</b-btn>
+                            <b-btn variant="primary" class="btn-block" @click="showBlockModal">预约作废</b-btn>
                         </b-col>
                     </b-row>
                 </div>
@@ -459,8 +460,9 @@
                 subSeat: '',
                 newSub: {},
                 confirmModal: false,
+                cancelType: 1,
                 confirmModalTitle:'预约作废',
-                confirmModalText: '取消预约会影响用户信誉，确认取消预约吗？',
+                confirmModalText: '作废预约会影响用户信誉，确认取消预约吗？',
                 total_price: 0,
                 options: {
                     format: 'HH:mm:ss',
@@ -1025,7 +1027,8 @@
                 let self = this;
                 self.$http.post('/api/admin/sub/cancelSub', {
                   id: self.sub_data.id,
-                  seat_id: self.selectSeat.id
+                  seat_id: self.selectSeat.id,
+                  type: self.cancelType
                 }).then((response) => {
                   if (response.body.code === 0){
                     window.toast.success({title:"取消/作废预约成功"});
@@ -1042,16 +1045,18 @@
 
             showCancleModal () {
                 let self = this;
+                self.cancelType = 1;
                 self.confirmModalTitle = '取消预约';
-                self.confirmModalText = '取消预约会影响用户信誉，确认取消预约吗？';
+                self.confirmModalText = '预约时间之前取消，不影响用户信誉。';
                 self.seat_status_modal = false;
                 self.confirmModal = true;
             },
 
             showBlockModal () {
               let self = this;
+              self.cancelType = 2;
               self.confirmModalTitle = '预约作废';
-              self.confirmModalText = '预约时间之前取消，不影响用户信誉。';
+              self.confirmModalText = '作废预约会影响用户信誉，确认作废预约吗？';
               self.seat_status_modal = false;
               self.confirmModal = true;
             },
