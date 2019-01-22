@@ -1186,6 +1186,7 @@
 
               self.$http.post('/api/admin/order/update', {
                 id: self.order_data.id,
+                order_code: self.order_data.order_code,
                 p_number: self.order_data.p_number,
                 phone: self.order_data.phone,
                 pay_type: self.order_data.pay_type,

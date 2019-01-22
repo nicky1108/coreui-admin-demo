@@ -2,7 +2,7 @@
     <div class="animated fadeIn">
         <b-card header="会员类型">
             <b-table :hover="true" :striped="true" responsive="sm" :items="items" :fields="fields">
-                
+
             </b-table>
         </b-card>
     </div>
@@ -40,6 +40,8 @@ export default {
                 }
             })
         },
+
+
     }
 }    
 </script>

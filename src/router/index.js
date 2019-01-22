@@ -12,6 +12,11 @@ const OrderDetail = () => import('@/views/consumption/OrderDetail')
 const Vip = () => import('@/views/vip/Home')
 const VipList = () => import('@/views/vip/Viplist')
 const VipDetail = () => import('@/views/vip/VipDetail')
+const MoneyRecord = () => import('@/views/vip/MoneyRecord')
+const PointRecord = () => import('@/views/vip/PointRecord')
+const VipRecord = () => import('@/views/vip/VipRecord')
+const OrderRecord = () => import('@/views/vip/OrderRecord')
+const PunishRecord = () => import('@/views/vip/PunishRecord')
 
 
 const Banner = () => import('@/views/active/Banner')
@@ -118,6 +123,31 @@ export default new Router({
           path: 'detail',
           name: '会员详情',
           component: VipDetail
+        },
+        {
+          path: 'moneyRecord',
+          name: '账户流水',
+          component: MoneyRecord
+        },
+        {
+          path: 'pointRecord',
+          name: '积分流水',
+          component: PointRecord
+        },
+        {
+          path: 'vipRecord',
+          name: '权益流水',
+          component: VipRecord
+        },
+        {
+          path: 'orderRecord',
+          name: '消费流水',
+          component: OrderRecord
+        },
+        {
+          path: 'punishRecord',
+          name: '惩罚记录',
+          component: PunishRecord
         }
       ]
     },

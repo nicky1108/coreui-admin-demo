@@ -12,10 +12,16 @@
         </b-row>
         <b-card header="会员列表">
             <b-table :hover="true" :striped="true" responsive="sm" :items="items" :fields="fields" :current-page="currentPage" :per-page="perPage">
+              <template slot="id" slot-scope="data">
+                {{  data.index + 1}}
+              </template>
+              <template slot="level_id" slot-scope="data">
+                  <b-badge :variant="getBadge(data.item.level_id)">{{ getVipName(data.item)}}</b-badge>
+                </template>
                 <template slot="gmt_create" slot-scope="data">
                     {{ data.item.gmt_create | dateformat()}}
                 </template>
-                
+
                 <template slot="gmt_vip_expire" slot-scope="data">
                     {{data.item.gmt_vip_expire | dateformat()}}
                 </template>
@@ -60,18 +66,13 @@ export default {
     }
   },
   methods: {
-    getBadge (status) {
-      return status === 'completed' ? 'success'
-        : status === 'success' ? 'success'
-        : status === 'queued' ? 'secondary'
-          : status === 'running' ? 'warning'
-          : status === 'pending' ? 'secondary'
-          : status === 'fail' ? 'danger'
-          : status === -1 ? 'danger'
-            : status === 'failed' ? 'danger' : 'primary'
+    getVipName (item) {
+      return item.levelname;
+
     },
-    getStatus (status) {
-        return status === -1 ? '未生效': '已生效';
+
+    getBadge (level_id) {
+      return !level_id || level_id === '-1' ? 'secondary': 'success';
     },
     getButtons (setting) {
 
@@ -86,6 +87,7 @@ export default {
         if (page <= this.ajaxPage) {
             return;
         }
+        page = page ? page : self.currentPage;
         self.$http.get(`/api/admin/user/list?page=${page}&prePage=${self.perPage}`).then(response => {
             if (response.body.code === 0)
             {
