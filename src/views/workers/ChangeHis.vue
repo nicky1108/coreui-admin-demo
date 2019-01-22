@@ -52,10 +52,10 @@
             ],
             fields: [
               {
-                "employees": "当班员工"
+                "admin_name": "当班员工"
               },
               {
-                "gmt_change": "交班时间"
+                "gmt_create": "交班时间"
               },
               {
                 "total_money": "本班总收入"
@@ -64,7 +64,7 @@
                 "rec_money": "实收金额"
               },
               {
-                "keep_money": "留存金额"
+                "remain_money": "留存金额"
               },
               {
                 "status": "状态"
@@ -90,7 +90,12 @@
             if (page <= this.ajaxPage) {
               return;
             }
-            self.$http.get(`/api/admin/charging/list`).then(response => {
+            let shop_id = localStorage.getItem('default_shop_id');
+            if ('shop_id' in self.$route.query) {
+              shop_id = self.$route.query.shop_id;
+            }
+            self.shop_id = parseInt(shop_id);
+            self.$http.get(`/api/admin/workers/changeRecord?shop_id=${self.shop_id}`).then(response => {
               if (response.body.code === 0)
               {
                 let list = response.body.data.list;

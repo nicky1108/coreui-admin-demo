@@ -207,10 +207,15 @@ export default {
 
         PayVip() {
           let self = this;
-
+          let shop_id = localStorage.getItem('default_shop_id');
+          if ('shop_id' in self.$route.query) {
+            shop_id = self.$route.query.shop_id;
+          }
+          self.shop_id = parseInt(shop_id);
           self.$http.post('/api/admin/user/payVip', {
             user_id: self.user.id,
-            pay_type: self.pay_type
+            pay_type: self.pay_type,
+            shop_id: self.shop_id
           }).then((response) => {
             if (response.body.code === 0){
               window.toast.success({title:"购买VIP成功"});
