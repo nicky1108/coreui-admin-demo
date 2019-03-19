@@ -5,21 +5,17 @@
         src="img/avatars/6.jpg"
         class="img-avatar"
         alt="admin@bootstrapmaster.com" />
-      <span>{{nickname}}-{{shopname}}</span>
+      <span class="span_lang" :class="lang === 'zh' ? 'active': ''" @click.stop="changeLang('zh')">中文</span>
+      <span class="span_lang" :class="lang === 'en' ? 'active': ''" @click.stop="changeLang('en')">EN</span>
     </template>
     <template slot="dropdown">
-      <b-dropdown-header tag="div" class="text-center"><strong>门店列表</strong></b-dropdown-header>
-      <b-dropdown-item v-for="(item, index) in shopList" :key="index">
-        <span @click="changeShop(item)">{{ item.shopname }}</span>
-      </b-dropdown-item>
-
       <b-dropdown-header
         tag="div"
         class="text-center">
         <strong>设置</strong>
       </b-dropdown-header>
-      <b-dropdown-item><i class="fa fa-shield" /> 设置密码</b-dropdown-item>
-      <b-dropdown-item><i class="fa fa-lock" /> 登出</b-dropdown-item>
+      <b-dropdown-item @click="jumpSetPassword"><i class="fa fa-shield" /> 设置密码</b-dropdown-item>
+      <b-dropdown-item @click="logOut"><i class="fa fa-lock" /> 登出</b-dropdown-item>
     </template>
   </AppHeaderDropdown>
 </template>
@@ -33,53 +29,46 @@ export default {
   },
   data: () => {
     return {
-      shopList: [],
-      nickname: '',
-      shopname: ''
+      lang: localStorage.getItem('lang') ? localStorage.getItem('lang') : 'zh'
     }
   },
   created () {
     let self = this;
-    this.fetchData();
+    // this.fetchData();
   },
   watch: {
     // 如果路由有变化，会再次执行该方法
-    '$route': 'fetchData'
+    // '$route': 'fetchData'
   },
   methods: {
-    fetchData: function () {
-      let self = this;
-      self.nickname = localStorage.getItem('nickname');
-      self.shopname = localStorage.getItem('shopname');
-      let shop_id = localStorage.getItem('default_shop_id');
-      self.$http.get('/api/admin/shop/list').then((response) => {
-        if (response.body.code === 0){
-          self.shopList = response.body.data;
-          if (!shop_id) {
-            localStorage.setItem('default_shop_id', self.shopList[0].id);
-            shop_id = self.shopList[0].id;
-          }
-
-          for(let i = 0; i < response.body.data.length; i ++) {
-            if (shop_id === self.shopList[i].id) {
-              localStorage.setItem('shopname', self.shopList[i].shopname);
-            }
-          }
-        }
-      })
+    logOut() {
+      window.localStorage.removeItem('adminToken');
+      this.$router.push('/account/login');
     },
 
-    changeShop (item) {
-      let shop_id = localStorage.getItem('shop_id');
-      if (parseInt(shop_id) !== -1 && parseInt(shop_id) !== parseInt(item.id)) {
-        location.href = '#/account/login';
-        return;
-      }
-      localStorage.setItem('default_shop_id', item.id);
-      localStorage.setItem('shopname', item.shopname);
+    changeLang (type) {
+      // this.$i18n.locale = this.lang
+      this.$i18n.locale = type;
+      window.localStorage.setItem('lang', type);
       location.reload();
+    },
+
+    jumpSetPassword () {
+      this.$router.push('/system/password')
     }
   }
 }
 </script>
+<style>
+  .span_lang {
+    margin-right: 10px;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+
+  .span_lang.active {
+    color: #20a8d8;
+    font-weight: bold;
+  }
+</style>
 

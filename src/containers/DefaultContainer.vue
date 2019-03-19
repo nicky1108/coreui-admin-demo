@@ -104,7 +104,21 @@ export default {
       let self = this;
       self.$http.get('/api/admin/config/nav').then((response) => {
         if (response.body.code === 0){
-            self.nav = response.body.data;
+            let nav = response.body.data;
+            if (self.$i18n.locale === 'en') {
+              for(let i = 0; i < nav.length; i++) {
+                nav[i].name = nav[i].name_en;
+
+                if (nav[i].children) {
+                  for (let j = 0; j < nav[i].children.length; j ++) {
+                    nav[i].children[j].name = nav[i].children[j].name_en;
+                  }
+                }
+              }
+            }
+
+
+            self.nav = nav;
         }
         else {
             window.toastError({message:"网络错误"});

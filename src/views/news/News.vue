@@ -2,25 +2,30 @@
   <div class="animated fadeIn">
     <b-row class="mb-3">
       <b-col sm="7" lg="7">
-
+        <select name="" id="" class="form-control" v-model="group_type" @change="changeGroup">
+          <option value="news">{{$t('news.typeArray.news')}}</option>
+          <option value="notice">{{$t('news.typeArray.notice')}}</option>
+          <option value="community">{{$t('news.typeArray.community')}}</option>
+        </select>
       </b-col>
       <b-col sm="3" lg="3">
+
       </b-col>
       <b-col sm="2" lg="2">
-        <b-button variant="primary" class="px-4" @click="doSetting('new')">{{$t('commen.add') +' ' + $t('active.banner.title')}}</b-button>
+        <b-button variant="primary" class="px-4" @click="doSetting('new')">{{$t('commen.add') + ' ' + $t('news.title')}}</b-button>
       </b-col>
     </b-row>
-    <b-card :header="$t('active.banner.title') + $t('commen.list')">
+    <b-card :header="$t('news.title')">
       <b-table :hover="true" :striped="true" responsive="sm" :items="items" :fields="fields" :current-page="currentPage" :per-page="perPage">
         <template slot="imgurl" slot-scope="data">
-          <img :src="data.item.imgurl" alt="" width="346" height="150">
+          <img :src="data.item.imgurl" alt="" width="100" height="75">
         </template>
         <template slot="gmt_create" slot-scope="data">
           {{ data.item.gmt_create | dateformat()}}
         </template>
 
-        <template slot="gmt_begin" slot-scope="data">
-          {{data.item.gmt_begin | dateformat()}}
+        <template slot="group_type" slot-scope="data">
+          {{$t(`news.typeArray.${data.item.group_type}`)}}
         </template>
         <template slot="gmt_end" slot-scope="data">
           {{data.item.gmt_end | dateformat()}}
@@ -33,109 +38,98 @@
         <b-pagination :total-rows="totalRows" :per-page="perPage" v-model="currentPage" :prev-text="$t('commen.prev')" :next-text="$t('commen.next')" hide-goto-end-buttons :change="getData(currentPage)"/>
       </nav>
     </b-card>
-    <b-modal :title="$t('active.banner.title')" v-model="myModal" @ok="postBanner" :cancel-title="$t('commen.modal.btn_cancel')" :ok-title="$t('commen.modal.btn_ok')">
+    <b-modal :title="$t('news.title')" size="lg" v-model="myModal" @ok="postNews" :cancel-title="$t('commen.modal.btn_cancel')" :ok-title="$t('commen.modal.btn_ok')">
       <b-row class="mb-3">
         <b-col sm="12" lg="12" class="mb-2">
           <b-input-group>
-            <b-input-group-prepend><b-input-group-text>{{$t('active.banner.modal.title')}}：</b-input-group-text></b-input-group-prepend>
-            <input type="text" class="form-control" :placeholder="$t('active.banner.modal.title')" autocomplete="job name" v-model="selectBanner.title" />
+            <b-input-group-prepend><b-input-group-text>{{$t('news.modal.title')}}：</b-input-group-text></b-input-group-prepend>
+            <input type="text" class="form-control" :placeholder="$t('news.modal.title')" autocomplete="job name" v-model="selectBanner.title" />
           </b-input-group>
         </b-col>
         <b-col sm="12" lg="12" class="mb-2">
           <b-input-group>
-            <b-input-group-prepend><b-input-group-text>{{$t('active.banner.modal.weight')}}：</b-input-group-text></b-input-group-prepend>
-            <input type="text" class="form-control" :placeholder="$t('active.banner.modal.weight')" autocomplete="job name" v-model="selectBanner.weight" />
+            <b-input-group-prepend><b-input-group-text>{{$t('news.modal.title_en')}}：</b-input-group-text></b-input-group-prepend>
+            <input type="text" class="form-control" :placeholder="$t('news.modal.title_en')" autocomplete="job name" v-model="selectBanner.title_en" />
           </b-input-group>
         </b-col>
+
         <b-col sm="12" lg="12" class="mb-2">
-          <b-input-group>
-            <b-input-group-prepend><b-input-group-text>{{$t('active.banner.modal.url')}}：</b-input-group-text></b-input-group-prepend>
-            <input type="text" class="form-control" :placeholder="$t('active.banner.modal.url')" autocomplete="job name" v-model="selectBanner.url" />
-          </b-input-group>
-        </b-col>
-        <b-col sm="12" lg="12" class="mb-2">
-          <b-input-group>
-            <b-input-group-prepend><b-input-group-text>{{$t('active.banner.modal.gmt_begin')}}：</b-input-group-text></b-input-group-prepend>
-            <date-picker v-model="selectBanner.gmt_begin" :config="options"></date-picker>
-          </b-input-group>
-        </b-col>
-        <b-col sm="12" lg="12" class="mb-2">
-          <b-input-group>
-            <b-input-group-prepend><b-input-group-text>{{$t('active.banner.modal.gmt_end')}}：</b-input-group-text></b-input-group-prepend>
-            <date-picker v-model="selectBanner.gmt_end" :config="options"></date-picker>
-          </b-input-group>
-        </b-col>
-        <b-col sm="12" lg="12" class="mb-2">
-          <img :src="image" alt="" width="346" height="150">
+          {{$t('news.modal.imgurl')}}
+          <img :src="image" alt="" width="200" height="150">
         </b-col>
         <form ref="ImgForm" @submit="uploadImg">
           <b-col sm="12" lg="12" class="mb-2">
             <b-form-group
-              :label="$t('active.banner.modal.upload_label')"
+              :label="$t('news.modal.upload_label')"
               label-for="fileInput"
               :label-cols="3"
               :horizontal="true">
               <b-form-file id="fileInput" :plain="true" @change="onFileChange"></b-form-file>
             </b-form-group>
-            <b-button variant="primary" type="submit">{{$t('active.banner.modal.btn_upload')}}</b-button>
+            <b-button variant="primary" type="submit">{{$t('news.modal.btn_upload')}}</b-button>
           </b-col>
         </form>
+        <b-col sm="12" lg="12" class="mb-2">
+          <b-tabs>
+            <b-tab :title="$t('news.modal.content')">
+              <b-col sm="12" lg="12" class="mb-2 pb-3">
+                <quill-editor v-model="selectBanner.content" style="height: 500px"></quill-editor>
+              </b-col>
+            </b-tab>
+            <b-tab :title="$t('news.modal.content_en')">
+              <b-col sm="12" lg="12" class="mb-2 pb-3">
+                <quill-editor v-model="selectBanner.content_en" style="height: 500px"></quill-editor>
+              </b-col>
+            </b-tab>
+          </b-tabs>
+        </b-col>
       </b-row>
     </b-modal>
-    <b-modal ref='confirmModal' class="modal-warning" :title="$t('commen.delete') + ' '+ $t('active.banner.title')" :cancel-title="$t('commen.modal.btn_cancel')" :ok-title="$t('commen.modal.btn_ok')" v-model="confirmModal" @ok="deleteBanner" ok-variant="warning">
-      {{$t('active.banner.modal.comfirm_text')}}
+    <b-modal ref='confirmModal' class="modal-warning" :title="$t('commen.delete') + ' '+ $t('news.title')" v-model="confirmModal" @ok="deleteNews" ok-variant="warning" :cancel-title="$t('commen.modal.btn_cancel')" :ok-title="$t('commen.modal.btn_ok')">
+      {{$t('news.modal.comfirm_text')}}
     </b-modal>
   </div>
 </template>
-<script>
-  // Import this component
-  import datePicker from 'vue-bootstrap-datetimepicker';
 
-  // Import date picker css
-  import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
+<script>
+  import Vue from 'vue'
+  import VueQuillEditor from 'vue-quill-editor'
+
+  // require styles
+  import 'quill/dist/quill.core.css'
+  import 'quill/dist/quill.snow.css'
+  import 'quill/dist/quill.bubble.css'
+
+  // mount with global
+  Vue.use(VueQuillEditor);
+
   export default {
-    name: 'banner',
-    components: {
-      datePicker
-    },
-    data: () => {
+    name: "News",
+    data () {
       return {
-        confirmModalTitle: '删除banner',
-        confirmModalText: '是否删除这个banner？',
-        confirmModal: false,
-        selectBanner: {},
-        myModal: false,
-        modal_title: 'banner编辑',
-        search: '',
-        image:'',
+        group_type: 'news',
         currentPage: 1,
         perPage: 10,
         totalRows: 0,
-        deleteModal : false,
-        detailContent : false,
-        content : '',
         ajaxPage: 0,
-        roles_list: [],
-        shopOptions:[],
-        roleOptions: [],
-        options: {
-          format: 'YYYY-MM-DD HH:mm:ss',
-          useCurrent: true,
-          locale: 'zh'
-        },
+        image: "",
+        myModal: false,
+        selectBanner:{},
+        confirmModalTitle: "",
+        confirmModal: false,
+        confirmModalText: "",
+        modal_title: '编辑文章',
         items: [
         ],
         fields: [
-          {title: "主题"},
-          {imgurl: "海报图片"},
+          {title: "标题(中文)"},
+          {title_en: "标题(英文)"},
+          {imgurl: "封面图"},
+          {url: "预览内容"},
+          {group_type: "所属分类"},
           {gmt_create: "创建时间"},
-          {gmt_begin: "开始时间"},
-          {gmt_end: "结束时间"},
-          {weight: "权重"},
           {setting: "操作"},
         ],
-
-        files:[],
         imgHost: 'https://hzql.oss-cn-hangzhou.aliyuncs.com',
         Region:'oss-cn-hangzhou',
         bucket: 'hzql'
@@ -143,16 +137,20 @@
     },
     created () {
       this.fields = [
-        {title: this.$i18n.messages[this.$i18n.locale].active.banner.tables.title},
-        {imgurl: this.$i18n.messages[this.$i18n.locale].active.banner.tables.img_title},
-        {gmt_create: this.$i18n.messages[this.$i18n.locale].active.banner.tables.gmt_create},
-        {gmt_begin: this.$i18n.messages[this.$i18n.locale].active.banner.tables.gmt_begin},
-        {gmt_end: this.$i18n.messages[this.$i18n.locale].active.banner.tables.gmt_end},
-        {weight: this.$i18n.messages[this.$i18n.locale].active.banner.tables.weight},
-        {setting: this.$i18n.messages[this.$i18n.locale].active.banner.tables.setting},
+        {title: this.$i18n.messages[this.$i18n.locale].news.tables.title},
+        {title_en: this.$i18n.messages[this.$i18n.locale].news.tables.title_en},
+        {imgurl: this.$i18n.messages[this.$i18n.locale].news.tables.imgurl},
+        {url: this.$i18n.messages[this.$i18n.locale].news.tables.url},
+        {group_type: this.$i18n.messages[this.$i18n.locale].news.tables.group_type},
+        {gmt_create: this.$i18n.messages[this.$i18n.locale].news.tables.gmt_create},
+        {setting: this.$i18n.messages[this.$i18n.locale].news.tables.setting},
       ];
+      this.fetchData();
     },
-    methods: {
+    watch : {
+      '$route': 'fetchData'
+    },
+    methods : {
       getBadge(status) {
         return status === 'completed' ? 'success'
           : status === 'success' ? 'success'
@@ -174,54 +172,36 @@
       getRowCount(items) {
         return items.length
       },
-      getData(page) {
-        let self = this;
-        if (page <= this.ajaxPage) {
-          return;
-        }
-        page = page ? page : self.currentPage;
-        self.$http.get(`/api/admin/banner/list?page=${page}&prePage=${self.perPage}`).then(response => {
-          if (response.body.code === 0) {
-            self.totalRows = response.body.data.totalCount;
-            self.ajaxPage = page;
-            let list = response.body.data.list;
-            for (let i = 0; i < list.length; i++) {
-              list[i]['setting'] = [self.$i18n.messages[self.$i18n.locale].commen.edit, self.$i18n.messages[self.$i18n.locale].commen.delete];
-            }
-            if (page === 1) {
-              self.items = [];
-            }
-            self.items = self.items.concat(list);
-          }
-        })
-      },
-
-
       doSetting(btn, item) {
         if (btn === this.$i18n.messages[this.$i18n.locale].commen.edit) {
           this.selectBanner = item;
           this.image = item.imgurl;
-          this.selectBanner.gmt_begin = window.moment(this.selectBanner.gmt_begin).format('YYYY-MM-DD HH:mm:ss');
-          this.selectBanner.gmt_end = window.moment(this.selectBanner.gmt_end).format('YYYY-MM-DD HH:mm:ss');
           this.myModal = true;
         }
         else if (btn === 'new') {
-          this.selectBanner = {};
+          this.selectBanner = {
+            group_type: this.group_type
+          };
           this.myModal = true;
-        }
-        else if (btn === '查看') {
-          this.$router.push(`/vip/detail?id=${item.id}`);
         }
         else if (btn === this.$i18n.messages[this.$i18n.locale].commen.delete) {
           this.selectBanner = item;
           this.confirmModal = true;
         }
       },
+      changeGroup(e) {
+        this.ajaxPage = 0;
+        this.getData(1);
+      },
+      fetchData () {
+        let self = this;
 
+        self.getData();
+      },
       onFileChange(e) {
         this.files = e.target.files || e.dataTransfer.files;
         if (!this.files.length) return;
-        // this.createImage(this.files[0]);
+        this.createImage(this.files[0]);
       },
       createImage(file) {
         let image = new Image();
@@ -238,7 +218,6 @@
         let self = this;
 
         self.$http.get('/api/admin/banner/getOssToken').then((response) => {
-            console.log(response);
           const client = new OSS.Wrapper({
             // region:self.region,
             accessKeyId: response.body.data.credentials.AccessKeyId,
@@ -253,7 +232,6 @@
 
             }).then((results) => {
               self.selectBanner.imgurl = self.imgHost + '/' + storeAs;
-              self.image = self.imgHost + '/' + storeAs;
               window.toast.success({title:self.$i18n.messages[self.$i18n.locale].commen.success});
             }).catch((err) => {
               console.log(err);
@@ -278,11 +256,32 @@
         // })
         return false;
       },
+      getData(page) {
+        let self = this;
+        if (page <= this.ajaxPage) {
+          return;
+        }
+        page = page ? page : self.currentPage;
+        self.$http.get(`/api/admin/news/list?page=${page}&prePage=${self.perPage}&group_type=${self.group_type}`).then(response => {
+          if (response.body.code === 0) {
+            self.totalRows = response.body.data.totalCount;
+            self.ajaxPage = page;
+            let list = response.body.data.list;
+            for (let i = 0; i < list.length; i++) {
+              list[i]['setting'] = [self.$i18n.messages[self.$i18n.locale].commen.edit, self.$i18n.messages[self.$i18n.locale].commen.delete];
+            }
+            if (page === 1) {
+              self.items = [];
+            }
+            self.items = self.items.concat(list);
+          }
+        })
+      },
 
-      postBanner() {
+      postNews() {
         let self = this;
 
-        self.$http.post(`/api/admin/banner/post`, self.selectBanner).then(response => {
+        self.$http.post(`/api/admin/news/post`, self.selectBanner).then(response => {
           if (response.body.code === 0)
           {
             window.toast.success({title:self.$i18n.messages[self.$i18n.locale].commen.success});
@@ -296,10 +295,10 @@
         })
       },
 
-      deleteBanner() {
+      deleteNews() {
         let self = this;
 
-        self.$http.post(`/api/admin/banner/delete/${self.selectBanner.id}`).then(response => {
+        self.$http.post(`/api/admin/news/delete/${self.selectBanner.id}`).then(response => {
           if (response.body.code === 0)
           {
             window.toast.success({title:self.$i18n.messages[self.$i18n.locale].commen.success});
@@ -315,3 +314,7 @@
     }
   }
 </script>
+
+<style scoped>
+
+</style>

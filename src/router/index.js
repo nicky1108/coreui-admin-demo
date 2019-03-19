@@ -2,22 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 
-// 消费管理
-const ConsumptionHome = () => import('@/views/consumption/Home')
-const Subscribe = () => import('@/views/consumption/Subscribe')
-const Order = () => import('@/views/consumption/Order')
-const OrderDetail = () => import('@/views/consumption/OrderDetail')
-
-// 会员管理
-const Vip = () => import('@/views/vip/Home')
-const VipList = () => import('@/views/vip/Viplist')
-const VipDetail = () => import('@/views/vip/VipDetail')
-const MoneyRecord = () => import('@/views/vip/MoneyRecord')
-const PointRecord = () => import('@/views/vip/PointRecord')
-const VipRecord = () => import('@/views/vip/VipRecord')
-const OrderRecord = () => import('@/views/vip/OrderRecord')
-const PunishRecord = () => import('@/views/vip/PunishRecord')
-
 
 const Banner = () => import('@/views/active/Banner')
 
@@ -31,18 +15,24 @@ const Login = () => import('@/views/pages/Login')
 
 //系统管理路由
 const Config = () => import('@/views/system/Config')
-const Admin = () => import('@/views/system/Admin')
-const Charging = () => import('@/views/system/Charging')
-const Room = () => import('@/views/system/Room')
-const Seat = () => import('@/views/system/Seats')
+const Password = () => import('@/views/system/Password')
 
-//门店管理路由
-const Shop = () => import('@/views/shop/Shop')
+// 内容管理
+const Nav = () => import('@/views/cms/Menu');
+const CmsHome = () => import('@/views/cms/Home');
+const Business = () => import('@/views/cms/Business');
+const CmsEnterprises = () => import('@/views/cms/Enterprises');
+const EnterprisesDetail = () => import('@/views/cms/EnterprisesDetail');
+
+const Product = () => import('@/views/product/Product');
+const Brand = () => import('@/views/product/Brand');
+const Classify = () => import('@/views/product/Classify');
 
 
-//交班管理
-const Change = () => import('@/views/workers/Change')
-const ChangeHis = () => import('@/views/workers/ChangeHis')
+const Talents = () => import('@/views/talents/Talents');
+
+
+const News = () => import('@/views/news/News');
 
 Vue.use(Router)
 
@@ -53,114 +43,104 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/consumption/home',
-      name: '消费管理',
-      component: DefaultContainer
-    },
-    {
-      path: '/consumption',
-      redirect: '/consumption/home',
-      name: '消费管理',
-      component: DefaultContainer,
-      children: [
-        {
-          path: 'home',
-          name: '消费管理',
-          component: ConsumptionHome
-        },
-        {
-          path: 'subscribe',
-          name: '预约管理',
-          component: Subscribe
-        },
-        {
-          path: 'order',
-          name: '订单管理',
-          component: Order
-        },
-        {
-          path: 'orderDetail',
-          name: '订单详情',
-          component: OrderDetail
-        }
-      ]
-    },
-    {
-      path: '/worker',
-      redirect: '/worker/change',
-      name: '交班管理',
-      component: DefaultContainer,
-      children: [
-        {
-          path: 'change',
-          name: '交班',
-          component: Change
-        },
-        {
-          path: 'his',
-          name: '交班记录',
-          component: ChangeHis
-        }
-      ]
-    },
-    {
-      path: '/vip',
-      redirect: '/vip/home',
-      name: '会员管理',
-      component: DefaultContainer,
-      children: [
-        {
-          path: 'home',
-          name: '会员类型',
-          component: Vip
-        },
-        {
-          path: 'list',
-          name: '会员列表',
-          component: VipList
-        },
-        {
-          path: 'detail',
-          name: '会员详情',
-          component: VipDetail
-        },
-        {
-          path: 'moneyRecord',
-          name: '账户流水',
-          component: MoneyRecord
-        },
-        {
-          path: 'pointRecord',
-          name: '积分流水',
-          component: PointRecord
-        },
-        {
-          path: 'vipRecord',
-          name: '权益流水',
-          component: VipRecord
-        },
-        {
-          path: 'orderRecord',
-          name: '消费流水',
-          component: OrderRecord
-        },
-        {
-          path: 'punishRecord',
-          name: '惩罚记录',
-          component: PunishRecord
-        }
-      ]
+      redirect: '/cms/nav',
     },
     {
       path: '/act',
       redirect: '/act/banner',
-      name: '会员管理',
+      name: 'Activity',
       component: DefaultContainer,
       children: [
         {
           path: 'banner',
-          name: 'banner',
+          name: 'Banner',
           component: Banner
+        }
+      ]
+    },
+
+    {
+      path: '/cms',
+      redirect: '/cms/nav',
+      name: 'CMS',
+      component: DefaultContainer,
+      children: [
+        {
+          path: 'nav',
+          name: 'Navigation',
+          component: Nav
+        },
+        {
+          path: 'home',
+          name:'Home',
+          component: CmsHome
+        },
+        {
+          path: 'business',
+          name: 'Business',
+          component: Business
+        },
+        {
+          path: 'enterprises',
+          name: 'Enterprises',
+          component: CmsEnterprises
+        },
+        {
+          path: 'enterprisesdetail',
+          name: 'Enterprises Detail',
+          component: EnterprisesDetail
+        }
+      ]
+    },
+
+    {
+      path: '/article',
+      redirect: '/article/news',
+      name: 'Article',
+      component: DefaultContainer,
+      children: [
+        {
+          path: 'news',
+          name: 'News',
+          component: News
+        },
+      ]
+    },
+
+    {
+      path: '/product',
+      redirect: '/product/list',
+      name: 'Product',
+      component: DefaultContainer,
+      children: [
+        {
+          path: 'list',
+          name: 'Product list',
+          component: Product
+        },
+        {
+          path: 'brand',
+          name: 'Product brand',
+          component: Brand
+        },
+        {
+          path: 'classify',
+          name: 'Product classify',
+          component: Classify
+        },
+      ]
+    },
+
+    {
+      path: '/talents',
+      redirect: '/talents/list',
+      name: 'Talents',
+      component: DefaultContainer,
+      children: [
+        {
+          path: 'list',
+          name: 'Talents list',
+          component: Talents
         }
       ]
     },
@@ -180,49 +160,22 @@ export default new Router({
         }
       ]
     },
-    {
-      path: '/shop',
-      redirect: '/shop/shops',
-      name: '门店管理',
-      component: DefaultContainer,
-      children: [
-        {
-          path: 'shops',
-          name: '门店列表',
-          component: Shop
-        }
-      ]
-    },
+
     {
       path: '/system',
       redirect: '/system/config',
-      name: '系统管理',
+      name: 'System',
       component: DefaultContainer,
       children: [
         {
-          path: 'charging',
-          name: '计费规则',
-          component: Charging
-        },
-        {
-          path: 'room',
-          name: '房间设置',
-          component: Room
-        },
-        {
-          path: 'seats',
-          name: '桌位设置',
-          component: Seat
-        },
-        {
           path: 'config',
-          name: '配置管理',
+          name: 'Config',
           component: Config
         },
         {
-          path: 'admin',
-          name: '管理员',
-          component: Admin
+          path: 'password',
+          name: 'Password',
+          component: Password
         }
       ]
     },
