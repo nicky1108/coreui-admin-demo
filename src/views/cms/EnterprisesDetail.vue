@@ -29,6 +29,32 @@
                 </b-col>
               </b-row>
             </b-tab>
+            <b-tab :title="$t('cms.entDetail.desc')" @click="changeType(1)">
+              <b-row>
+                <b-col sm="12" lg="12">
+                  <b-tabs>
+                    <b-tab :title="$t('cms.entDetail.content')" active>
+                      <b-row class="mb-4">
+                        <quill-editor v-model="entItem.desc"></quill-editor>
+                      </b-row>
+                    </b-tab>
+                    <b-tab :title="$t('cms.entDetail.content_en')">
+                      <b-row class="mb-4">
+                        <quill-editor v-model="entItem.desc_en"></quill-editor>
+                      </b-row>
+                    </b-tab>
+                  </b-tabs>
+
+                </b-col>
+
+              </b-row>
+              <b-row class="mt-3">
+                <b-col sm="12" lg="12">
+                  <button class="btn btn-primary float-right" @click="doSave">{{$t('cms.entDetail.btn_save')}}</button>
+                </b-col>
+              </b-row>
+            </b-tab>
+
             <b-tab :title="$t('cms.entDetail.product_title')" @click="changeType(2)">
               <b-row class="mb-3">
                 <b-col sm="7" lg="7">

@@ -82,13 +82,16 @@ module.exports = {
 
     about: {
       title: "关于我们",
-      introduction: "企业简介",
+      introduction: "公司概况",
       content: "中文内容",
       content_en: "英文内容",
       btn_save: "保存",
-      product_title: "产品展示",
+      goals: "发展目标",
+      culture: "企业文化",
+      product_title: "办公环境",
       image_title: "图片",
       contact_title: "联系信息",
+      talents_content: "人才理念",
       tel: "电话",
       email: "邮箱",
       address:"地址",
@@ -142,6 +145,8 @@ module.exports = {
       modal: {
         name: "企业名称(中文)",
         name_en: "企业名称(英文)",
+        desc: "描述",
+        desc_en: "描述(英文)",
         business_id: "所属领域",
         url: "跳转地址",
         comfirm_text : "是否确认删除这个企业？"
@@ -151,6 +156,7 @@ module.exports = {
     entDetail: {
       title: "下属企业",
       introduction: "企业简介",
+      desc: "描述",
       content: "中文内容",
       content_en: "英文内容",
       btn_save: "保存",
@@ -187,6 +193,7 @@ module.exports = {
       imgurl: "封面图",
       url: "预览内容",
       group_type: "所属分类",
+      preview: "预览",
       gmt_create: "创建时间",
       setting: "操作"
     },
@@ -194,7 +201,12 @@ module.exports = {
     modal: {
       title: "标题(中文)",
       title_en: "标题(英文)",
+      desc: "描述",
+      desc_en: "描述(英文)",
       imgurl: "封面图",
+      group_type: "类型",
+      chooseGroup:"选择类型",
+      url: "跳转地址",
       content: "中文内容",
       content_en: "英文内容",
       upload_label: "上传图片",

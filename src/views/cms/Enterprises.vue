@@ -50,6 +50,18 @@
         </b-col>
         <b-col sm="12" lg="12" class="mb-2">
           <b-input-group>
+            <b-input-group-prepend><b-input-group-text>{{$t('cms.enterprises.modal.desc')}}：</b-input-group-text></b-input-group-prepend>
+            <textarea type="text" class="form-control" :placeholder="$t('cms.enterprises.modal.desc')" autocomplete="job name" v-model="selectBanner.desc" ></textarea>
+          </b-input-group>
+        </b-col>
+        <b-col sm="12" lg="12" class="mb-2">
+          <b-input-group>
+            <b-input-group-prepend><b-input-group-text>{{$t('cms.enterprises.modal.desc_en')}}：</b-input-group-text></b-input-group-prepend>
+            <textarea type="text" class="form-control" :placeholder="$t('cms.enterprises.modal.desc_en')" autocomplete="job name" v-model="selectBanner.desc_en" ></textarea>
+          </b-input-group>
+        </b-col>
+        <b-col sm="12" lg="12" class="mb-2">
+          <b-input-group>
             <b-input-group-prepend><b-input-group-text>{{$t('cms.enterprises.modal.business_id')}}：</b-input-group-text></b-input-group-prepend>
             <select class="form-control" :placeholder="$t('cms.enterprises.modal.business_id')" autocomplete="job name" v-model="selectBanner.business_id" >
               <option v-for="(item, index) in business" :key="index" :value="item.id">{{$i18n.locale === 'zh' ? item.title : item.title_en}}</option>

@@ -27,8 +27,9 @@
         <template slot="group_type" slot-scope="data">
           {{$t(`news.typeArray.${data.item.group_type}`)}}
         </template>
-        <template slot="gmt_end" slot-scope="data">
-          {{data.item.gmt_end | dateformat()}}
+        <template slot="url" slot-scope="data">
+          <a v-if="data.item.url && data.item.url.indexOf('http') === 0" :href="data.item.url" target="_blank">{{$t('news.tables.preview')}}</a>
+          <span v-if="data.item.url && data.item.url.indexOf('http') !== 0">{{data.item.url}}</span>
         </template>
         <template slot="setting" slot-scope="data">
           <b-button v-for="btn in data.item.setting" :key="btn" :variant="getButtons(btn)" class="ml-2" @click="doSetting(btn, data.item)">{{btn}}</b-button>
@@ -50,6 +51,35 @@
           <b-input-group>
             <b-input-group-prepend><b-input-group-text>{{$t('news.modal.title_en')}}：</b-input-group-text></b-input-group-prepend>
             <input type="text" class="form-control" :placeholder="$t('news.modal.title_en')" autocomplete="job name" v-model="selectBanner.title_en" />
+          </b-input-group>
+        </b-col>
+        <b-col sm="12" lg="12" class="mb-2">
+          <b-input-group>
+            <b-input-group-prepend><b-input-group-text>{{$t('news.modal.group_type')}}：</b-input-group-text></b-input-group-prepend>
+            <select name="" id="Brand" class="form-control" v-model="selectBanner.group_type">
+              <option value="-1">--{{$t('news.modal.chooseGroup')}}--</option>
+              <option value="news">{{$t('news.typeArray.news')}}</option>
+              <option value="notice">{{$t('news.typeArray.notice')}}</option>
+              <option value="community">{{$t('news.typeArray.community')}}</option>
+            </select>
+          </b-input-group>
+        </b-col>
+        <b-col sm="12" lg="12" class="mb-2">
+          <b-input-group>
+            <b-input-group-prepend><b-input-group-text>{{$t('news.modal.desc')}}：</b-input-group-text></b-input-group-prepend>
+            <textarea type="text" class="form-control" :placeholder="$t('news.modal.desc')" autocomplete="job name" v-model="selectBanner.desc" ></textarea>
+          </b-input-group>
+        </b-col>
+        <b-col sm="12" lg="12" class="mb-2">
+          <b-input-group>
+            <b-input-group-prepend><b-input-group-text>{{$t('news.modal.desc_en')}}：</b-input-group-text></b-input-group-prepend>
+            <textarea type="text" class="form-control" :placeholder="$t('news.modal.desc_en')" autocomplete="job name" v-model="selectBanner.desc_en" ></textarea>
+          </b-input-group>
+        </b-col>
+        <b-col sm="12" lg="12" class="mb-2">
+          <b-input-group>
+            <b-input-group-prepend><b-input-group-text>{{$t('news.modal.url')}}：</b-input-group-text></b-input-group-prepend>
+            <input type="text" class="form-control" :placeholder="$t('news.modal.url')" autocomplete="job name" v-model="selectBanner.url" />
           </b-input-group>
         </b-col>
 

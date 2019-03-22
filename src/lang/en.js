@@ -82,13 +82,16 @@ module.exports = {
 
     about: {
       title: "About Us",
-      introduction: "Introduction",
+      introduction: "Company Profile",
       content: "Chiness Content",
       content_en: "English Content",
       btn_save: "Save",
-      product_title: "Products",
+      goals: "Goals",
+      culture: "Culture",
+      product_title: "Work Enironment",
       image_title: "Pictures",
       contact_title: "Contact",
+      talents_content: "Talents Philosophy",
       tel: "Phone Number",
       email: "Email",
       address:"Address(Chiness)",
@@ -142,6 +145,8 @@ module.exports = {
       modal: {
         name: "Enterprises Name(Chiness)",
         name_en: "Enterprises Name(English)",
+        desc: "Describe(Chiness)",
+        desc_en: "Describe(English)",
         business_id: "Business Area",
         url: "Jump Url address",
         comfirm_text : "Confirm to delete the Enterprises？"
@@ -151,6 +156,7 @@ module.exports = {
     entDetail: {
       title: "Enterprises",
       introduction: "Introduction",
+      desc: "Describe",
       content: "Chiness Content",
       content_en: "English Content",
       btn_save: "Save",
@@ -186,6 +192,7 @@ module.exports = {
       title_en: "Title(English)",
       imgurl: "Cover",
       url: "Preview",
+      preview: "Preview",
       group_type: "Classification",
       gmt_create: "Creation Time",
       setting: "Operation"
@@ -194,7 +201,12 @@ module.exports = {
     modal: {
       title: "Title(Chiness)",
       title_en: "Title(English)",
+      desc: "Describe(Chiness)",
+      desc_en: "Describe(English)",
       imgurl: "Cover",
+      group_type: "Type",
+      chooseGroup:"Choose Type",
+      url:"Url Address",
       content: "Chiness Content",
       content_en: "English Content",
       upload_label: "Upload Pictures",
@@ -221,18 +233,18 @@ module.exports = {
     },
 
     classify: {
-      title: "Classification",
+      title: "Categories",
       tables: {
-        classify_name: "Classify Name(Chiness)",
-        classify_name_en: "Classify Name(English)",
+        classify_name: "Categories Name(Chiness)",
+        classify_name_en: "Categories Name(English)",
         count: "Products Count",
         setting: "Operation"
       },
 
       modal: {
-        classify_name: "Classify Name(Chiness)",
-        classify_name_en: "Classify Name(English)",
-        comfirm_text : "Confirm to delete the Classify？"
+        classify_name: "Categories Name(Chiness)",
+        classify_name_en: "Categories Name(English)",
+        comfirm_text : "Confirm to delete the Categories？"
       }
     },
 
@@ -242,7 +254,7 @@ module.exports = {
         product_name: "Product Name(Chiness)",
         product_name_en: "Product Name(English)",
         brand: "Brand Name",
-        classify: "Classify Name",
+        classify: "Categories Name",
         url: "Preview",
         setting: "Operation"
       },
@@ -251,9 +263,9 @@ module.exports = {
         product_name: "Product Name(Chiness)",
         product_name_en: "Product Name(English)",
         brand: "Brand Name",
-        classify: "Classify Name",
+        classify: "Categories Name",
         chooseBrand: "Choose Brand",
-        chooseClassify: "Choose Classify",
+        chooseClassify: "Choose Categories",
         imgurl: "Cover",
         content: "Content(Chiness)",
         content_en: "Content(English)",

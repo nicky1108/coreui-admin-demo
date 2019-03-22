@@ -29,7 +29,57 @@
                 </b-col>
               </b-row>
             </b-tab>
-            <b-tab :title="$t('cms.about.product_title')" @click="changeType(2)">
+            <b-tab :title="$t('cms.about.goals')" active @click="changeType(2)">
+              <b-row>
+                <b-col sm="12" lg="12">
+                  <b-tabs>
+                    <b-tab :title="$t('cms.about.content')" active>
+                      <b-row class="mb-4">
+                        <quill-editor v-model="cmsData.goals_content"></quill-editor>
+                      </b-row>
+                    </b-tab>
+                    <b-tab :title="$t('cms.about.content_en')">
+                      <b-row class="mb-4">
+                        <quill-editor v-model="cmsData.goals_content_en"></quill-editor>
+                      </b-row>
+                    </b-tab>
+                  </b-tabs>
+
+                </b-col>
+
+              </b-row>
+              <b-row class="mt-3">
+                <b-col sm="12" lg="12">
+                  <button class="btn btn-primary float-right" @click="doSave">{{$t('cms.about.btn_save')}}</button>
+                </b-col>
+              </b-row>
+            </b-tab>
+            <b-tab :title="$t('cms.about.culture')" active @click="changeType(3)">
+              <b-row>
+                <b-col sm="12" lg="12">
+                  <b-tabs>
+                    <b-tab :title="$t('cms.about.content')" active>
+                      <b-row class="mb-4">
+                        <quill-editor v-model="cmsData.culture_content"></quill-editor>
+                      </b-row>
+                    </b-tab>
+                    <b-tab :title="$t('cms.about.content_en')">
+                      <b-row class="mb-4">
+                        <quill-editor v-model="cmsData.culture_content_en"></quill-editor>
+                      </b-row>
+                    </b-tab>
+                  </b-tabs>
+
+                </b-col>
+
+              </b-row>
+              <b-row class="mt-3">
+                <b-col sm="12" lg="12">
+                  <button class="btn btn-primary float-right" @click="doSave">{{$t('cms.about.btn_save')}}</button>
+                </b-col>
+              </b-row>
+            </b-tab>
+            <b-tab :title="$t('cms.about.product_title')" @click="changeType(4)">
               <b-row class="mb-3">
                 <b-col sm="7" lg="7">
 
@@ -54,7 +104,7 @@
               </b-row>
 
             </b-tab>
-            <b-tab :title="$t('cms.about.contact_title')" @click="changeType(3)">
+            <b-tab :title="$t('cms.about.contact_title')" @click="changeType(5)">
               <b-row class="mb-3">
                 <b-col sm="12" lg="12" class="mb-2">
                   <b-input-group>
@@ -80,6 +130,31 @@
                     <input type="text" class="form-control" :placeholder="$t('cms.about.address_en')" autocomplete="job name" v-model="cmsData.address_en" />
                   </b-input-group>
                 </b-col>
+              </b-row>
+              <b-row class="mt-3">
+                <b-col sm="12" lg="12">
+                  <button class="btn btn-primary float-right" @click="doSave">{{$t('cms.about.btn_save')}}</button>
+                </b-col>
+              </b-row>
+            </b-tab>
+            <b-tab :title="$t('cms.about.talents_content')" active @click="changeType(6)">
+              <b-row>
+                <b-col sm="12" lg="12">
+                  <b-tabs>
+                    <b-tab :title="$t('cms.about.content')" active>
+                      <b-row class="mb-4">
+                        <quill-editor v-model="cmsData.talents_content"></quill-editor>
+                      </b-row>
+                    </b-tab>
+                    <b-tab :title="$t('cms.about.content_en')">
+                      <b-row class="mb-4">
+                        <quill-editor v-model="cmsData.talents_content_en"></quill-editor>
+                      </b-row>
+                    </b-tab>
+                  </b-tabs>
+
+                </b-col>
+
               </b-row>
               <b-row class="mt-3">
                 <b-col sm="12" lg="12">
