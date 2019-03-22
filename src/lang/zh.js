@@ -95,6 +95,7 @@ module.exports = {
       tel: "电话",
       email: "邮箱",
       address:"地址",
+      oa: "OA系统地址",
       address_en:"地址(英文)",
       tables: {
         imgUrl: "图片",

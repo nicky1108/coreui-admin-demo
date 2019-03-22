@@ -94,6 +94,7 @@ module.exports = {
       talents_content: "Talents Philosophy",
       tel: "Phone Number",
       email: "Email",
+      oa: "OA Url",
       address:"Address(Chiness)",
       address_en:"Address(English)",
       tables: {

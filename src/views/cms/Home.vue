@@ -120,6 +120,12 @@
                 </b-col>
                 <b-col sm="12" lg="12" class="mb-2">
                   <b-input-group>
+                    <b-input-group-prepend><b-input-group-text>{{$t('cms.about.oa')}}：</b-input-group-text></b-input-group-prepend>
+                    <input type="text" class="form-control" :placeholder="$t('cms.about.oa')" autocomplete="job name" v-model="cmsData.oa_url" />
+                  </b-input-group>
+                </b-col>
+                <b-col sm="12" lg="12" class="mb-2">
+                  <b-input-group>
                     <b-input-group-prepend><b-input-group-text>{{$t('cms.about.address')}}：</b-input-group-text></b-input-group-prepend>
                     <input type="text" class="form-control" :placeholder="$t('cms.about.address')" autocomplete="job name" v-model="cmsData.address" />
                   </b-input-group>
