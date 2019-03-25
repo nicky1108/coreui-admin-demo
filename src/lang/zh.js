@@ -111,6 +111,8 @@ module.exports = {
 
     business: {
       title: "所属领域",
+      background: "背景图",
+      btn_save: "保存",
       tables: {
         title: "导航标题(中文)",
         title_en: "导航标题(英文)",
@@ -150,6 +152,9 @@ module.exports = {
         desc_en: "描述(英文)",
         business_id: "所属领域",
         url: "跳转地址",
+        imgurl: "封面图",
+        upload_label: "上传图片",
+        btn_upload: "上传",
         comfirm_text : "是否确认删除这个企业？"
       }
     },

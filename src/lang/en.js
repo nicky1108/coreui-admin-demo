@@ -111,6 +111,8 @@ module.exports = {
 
     business: {
       title: "Business Area",
+      background: "background",
+      btn_save: "Save",
       tables: {
         title: "Title(Chinese)",
         title_en: "Title(English)",
@@ -150,6 +152,9 @@ module.exports = {
         desc_en: "Describe(English)",
         business_id: "Business Area",
         url: "Jump Url address",
+        imgurl: "Cover",
+        upload_label: "Upload Pictures",
+        btn_upload: "Upload",
         comfirm_text : "Confirm to delete the Enterprises？"
       }
     },

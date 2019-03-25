@@ -68,7 +68,7 @@
         <b-col sm="12" lg="12" class="mb-2">
           <img :src="image" alt="" width="346" height="150">
         </b-col>
-        <form ref="ImgForm" @submit="uploadImg">
+        <form ref="ImgForm" @submit.stop="uploadImg">
           <b-col sm="12" lg="12" class="mb-2">
             <b-form-group
               :label="$t('active.banner.modal.upload_label')"

@@ -10,12 +10,12 @@
                   <b-tabs>
                     <b-tab :title="$t('cms.entDetail.content')" active>
                       <b-row class="mb-4">
-                        <quill-editor v-model="entItem.about"></quill-editor>
+                        <vue-ueditor-wrap ref="ueditor" v-model="entItem.about" :destroy="false" :config="config"></vue-ueditor-wrap>
                       </b-row>
                     </b-tab>
                     <b-tab :title="$t('cms.entDetail.content_en')">
                       <b-row class="mb-4">
-                        <quill-editor v-model="entItem.about_en"></quill-editor>
+                        <vue-ueditor-wrap ref="ueditor" v-model="entItem.about_en" :destroy="false" :config="config"></vue-ueditor-wrap>
                       </b-row>
                     </b-tab>
                   </b-tabs>
@@ -35,12 +35,12 @@
                   <b-tabs>
                     <b-tab :title="$t('cms.entDetail.content')" active>
                       <b-row class="mb-4">
-                        <quill-editor v-model="entItem.desc"></quill-editor>
+                        <vue-ueditor-wrap ref="ueditor" v-model="entItem.desc" :destroy="false" :config="config"></vue-ueditor-wrap>
                       </b-row>
                     </b-tab>
                     <b-tab :title="$t('cms.entDetail.content_en')">
                       <b-row class="mb-4">
-                        <quill-editor v-model="entItem.desc_en"></quill-editor>
+                        <vue-ueditor-wrap ref="ueditor" v-model="entItem.desc_en" :destroy="false" :config="config"></vue-ueditor-wrap>
                       </b-row>
                     </b-tab>
                   </b-tabs>
@@ -125,7 +125,7 @@
         <b-col sm="12" lg="12" class="mb-2">
           <img :src="image" alt="" width="500" height="375">
         </b-col>
-        <form ref="ImgForm" @submit="uploadImg">
+        <form ref="ImgForm" @submit.stop="uploadImg">
           <b-col sm="12" lg="12" class="mb-2">
             <b-form-group
               :label="$t('cms.entDetail.modal.upload_label')"
@@ -147,17 +147,13 @@
 
 <script>
   import Vue from 'vue'
-  import VueQuillEditor from 'vue-quill-editor'
+  import VueUeditorWrap from 'vue-ueditor-wrap'
 
-  // require styles
-  import 'quill/dist/quill.core.css'
-  import 'quill/dist/quill.snow.css'
-  import 'quill/dist/quill.bubble.css'
-
-  // mount with global
-  Vue.use(VueQuillEditor);
   export default {
     name: "EnterprisesDetail",
+    components: {
+      VueUeditorWrap
+    },
     data () {
       return {
         id:"",
@@ -179,6 +175,22 @@
         confirmModalText: "是否删除这个图片",
         modal_title: '所属领域',
         imgHost: 'https://hzql.oss-cn-hangzhou.aliyuncs.com',
+        config: {
+          // 编辑器不自动被内容撑高
+          autoHeightEnabled: false,
+          // 初始容器高度
+          initialFrameHeight: 240,
+          // 初始容器宽度
+          initialFrameWidth: '100%',
+          // 上传文件接口（这个地址是我为了方便各位体验文件上传功能搭建的临时接口，请勿在生产环境使用！！！）
+          serverUrl: 'http://admin.hzqltz.com.cn/api/admin/ueditor',
+          // UEditor 资源文件的存放路径，如果你使用的是 vue-cli 生成的项目，通常不需要设置该选项，vue-ueditor-wrap 会自动处理常见的情况，如果需要特殊配置，参考下方的常见问题2
+          UEDITOR_HOME_URL: '/static/UEditor/'
+          // 配合最新编译的资源文件，你可以实现添加自定义Request Headers,详情https://github.com/HaoChuan9421/ueditor/commits/dev-1.4.3.3
+          // headers: {
+          //   access_token: '37e7c9e3fda54cca94b8c88a4b5ddbf3'
+          // }
+        },
         items: [
         ],
         fields: [

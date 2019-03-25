@@ -49,6 +49,22 @@
           </b-input-group>
         </b-col>
         <b-col sm="12" lg="12" class="mb-2">
+          {{$t('cms.enterprises.modal.imgurl')}}
+          <img :src="selectBanner.cover_img" alt="" width="200" height="150">
+        </b-col>
+        <form ref="ImgForm" @submit.stop="uploadImg">
+          <b-col sm="12" lg="12" class="mb-2">
+            <b-form-group
+              :label="$t('cms.enterprises.modal.upload_label')"
+              label-for="fileInput"
+              :label-cols="3"
+              :horizontal="true">
+              <b-form-file id="fileInput" :plain="true" @change="onFileChange"></b-form-file>
+            </b-form-group>
+            <b-button variant="primary" type="submit">{{$t('cms.enterprises.modal.btn_upload')}}</b-button>
+          </b-col>
+        </form>
+        <b-col sm="12" lg="12" class="mb-2">
           <b-input-group>
             <b-input-group-prepend><b-input-group-text>{{$t('cms.enterprises.modal.desc')}}：</b-input-group-text></b-input-group-prepend>
             <textarea type="text" class="form-control" :placeholder="$t('cms.enterprises.modal.desc')" autocomplete="job name" v-model="selectBanner.desc" ></textarea>
@@ -122,7 +138,10 @@
           {business_id: "所属领域"},
           {url: "跳转地址(URL)"},
           {setting: "操作(Setting)"},
-        ]
+        ],
+        imgHost: 'https://hzql.oss-cn-hangzhou.aliyuncs.com',
+        Region:'oss-cn-hangzhou',
+        bucket: 'hzql'
       }
     },
     created () {
@@ -182,6 +201,64 @@
       changeGroup(e) {
         this.ajaxPage = 0;
         this.getData(1);
+      },
+      onFileChange(e) {
+        this.files = e.target.files || e.dataTransfer.files;
+        if (!this.files.length) return;
+        this.createImage(this.files[0]);
+      },
+      createImage(file) {
+        let image = new Image();
+        let reader = new FileReader();
+        let vm = this;
+
+        // reader.onload = (e) => {
+        //   vm.image = e.target.result;
+        // };
+        reader.readAsDataURL(file);
+      },
+
+      uploadImg () {
+        let self = this;
+
+        self.$http.get('/api/admin/banner/getOssToken').then((response) => {
+          const client = new OSS.Wrapper({
+            // region:self.region,
+            accessKeyId: response.body.data.credentials.AccessKeyId,
+            accessKeySecret: response.body.data.credentials.AccessKeySecret,
+            stsToken: response.body.data.credentials.SecurityToken,
+            bucket:self.bucket
+          });
+          if(self.files){
+            const file = self.files[0];
+            const storeAs = file.name;
+            client.multipartUpload(storeAs, file, {
+
+            }).then((results) => {
+              self.selectBanner.cover_img = self.imgHost + '/' + storeAs;
+              window.toast.success({title:self.$i18n.messages[self.$i18n.locale].commen.success});
+            }).catch((err) => {
+              console.log(err);
+              window.toast.error({title:self.$i18n.messages[self.$i18n.locale].commen.fail});
+            });
+          }
+        });
+
+        // self.$http.post(`/api/admin/banner/upload`, {
+        //   image: self.image
+        // }).then(response => {
+        //   if (response.body.code === 0)
+        //   {
+        //     window.toast.success({title:"操作成功"});
+        //     self.getData();
+        //   }
+        //   else {
+        //     window.toast.error({title:response.body.errMsg});
+        //   }
+        // }).catch(() => {
+        //   window.toast.error({title:"网络错误"});
+        // })
+        return false;
       },
       getData(page) {
         let self = this;
